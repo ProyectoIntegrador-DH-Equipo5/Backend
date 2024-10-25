@@ -34,6 +34,8 @@ public class ObraEntity {
     @Column(name="disponibilidad")
     private Boolean disponibilidad;
 
+    @Column(name="artista")
+    ArtistaEntity artista;
     //Enum de tamaños
     @Column(name="tamanio")
     private Sizes tamano;
