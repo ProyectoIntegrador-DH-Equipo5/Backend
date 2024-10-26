@@ -1,7 +1,6 @@
 package com.artxp.artxp.api.models.response;
 
-import com.artxp.artxp.domain.Sizes;
-import jakarta.persistence.*;
+import com.artxp.artxp.util.Sizes;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
