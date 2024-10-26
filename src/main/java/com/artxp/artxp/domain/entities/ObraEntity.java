@@ -1,6 +1,6 @@
 package com.artxp.artxp.domain.entities;
 
-import com.artxp.artxp.domain.Sizes;
+import com.artxp.artxp.util.Sizes;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -11,34 +11,46 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Data
 @Builder
+@RequiredArgsConstructor
+
 public class ObraEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name="nombre")
+    @NonNull @Column(name="nombre")
     private String nombre;
 
-    @Column(name="fecha_creacion")
+    @NonNull @Column(name="fecha_creacion")
     private LocalDate fechaCreacion;
 
-    @Column(name="descripcion")
+    @NonNull @Column(name="descripcion")
     private String descripcion;
 
-    @Column(name="precio_renta")
+    @NonNull @Column(name="precio_renta")
     private Double precioRenta;
 
-    @Column(name="img")
+    @NonNull @Column(name="img")
     private String img;
 
-    @Column(name="disponibilidad")
+    @NonNull @Column(name="disponibilidad")
     private Boolean disponibilidad;
 
-    @Column(name="artista")
-    ArtistaEntity artista;
     //Enum de tamaños
-    @Column(name="tamanio")
+    @NonNull @Column(name="tamanio")
     private Sizes tamano;
 
+    // ----------- KEYS -----------
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "tecnica_id", nullable = false)
+    @NonNull private TecnicaObraEntity tecnicaObra;
+
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "artista_id", nullable = false)
+    @NonNull private MovimientoArtisticoEntity movimientoArtistico;
+
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "movimiento_artistico_id", nullable = false)
+    @NonNull private ArtistaEntity artista;
 
 }

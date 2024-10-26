@@ -1,21 +1,18 @@
 package com.artxp.artxp.domain.entities;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-@Entity(name="obra")
+@Entity(name="artista")
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
 @Builder
+@RequiredArgsConstructor
 public class ArtistaEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name="nombre")
-    private String nombre;
+    @Column(name="nombre") @NonNull private String nombre;
 }
