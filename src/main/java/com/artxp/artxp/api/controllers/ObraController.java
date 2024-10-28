@@ -1,5 +1,6 @@
 package com.artxp.artxp.api.controllers;
 
+import com.artxp.artxp.api.models.response.ObraDTO;
 import com.artxp.artxp.domain.entities.ObraEntity;
 import com.artxp.artxp.infrastructure.services.ObraService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,22 +20,21 @@ public class ObraController {
 
     // lista de obras
     @GetMapping("/listartodos")
-    public ResponseEntity<List<ObraEntity>> listarTodo(){
+    public ResponseEntity<List<ObraDTO>> listarTodo() {
         return ResponseEntity.ok(obraService.buscarTodasLasObras());
     }
 
     //Agregar nueva Obra
     @PostMapping
-    public ResponseEntity<ObraEntity> guardarObra(@RequestBody ObraEntity obraN){
-        return ResponseEntity.ok(obraService.guardarObraNueva(obraN));
+    public ResponseEntity<ObraDTO> guardarObra(@RequestBody ObraDTO obraDTO) {
+        return ResponseEntity.ok(obraService.guardarObraNueva(obraDTO));
     }
 
     //Eliminar
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> eliminarObraPorId(@PathVariable("id") Integer idEliminar){
+    public ResponseEntity<String> eliminarObraPorId(@PathVariable("id") Integer idEliminar) {
         obraService.eliminaObraPorID(idEliminar);
         return ResponseEntity.ok("Obra de Arte Eliminada");
     }
-
 
 }
