@@ -4,6 +4,7 @@ import com.artxp.artxp.util.Sizes;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -15,7 +16,7 @@ public class ObraDTO {
     private LocalDate fechaCreacion;
     private String descripcion;
     private Double precioRenta;
-    private String img;
+    //private String img;
     private Boolean disponibilidad;
 
     //Enum de tamaños
@@ -25,6 +26,7 @@ public class ObraDTO {
     private TecnicaObraDTO tecnicaObra;
     private MovimientoArtisticoDTO movimientoArtistico;
     private ArtistaDTO artista;
+    private List<ImagenDTO> imagenes;
 
 
     public Integer getId() {
@@ -67,6 +69,7 @@ public class ObraDTO {
         this.precioRenta = precioRenta;
     }
 
+    /*
     public String getImg() {
         return img;
     }
@@ -74,6 +77,7 @@ public class ObraDTO {
     public void setImg(String img) {
         this.img = img;
     }
+    */
 
     public Boolean getDisponibilidad() {
         return disponibilidad;
@@ -113,5 +117,13 @@ public class ObraDTO {
 
     public void setArtista(ArtistaDTO artista) {
         this.artista = artista;
+    }
+
+    public List<ImagenDTO> getImagenes() {
+        return imagenes;
+    }
+
+    public void setImagenes(List<ImagenDTO> imagenes) {
+        this.imagenes = imagenes;
     }
 }

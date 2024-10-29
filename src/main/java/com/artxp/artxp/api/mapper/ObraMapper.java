@@ -1,13 +1,7 @@
 package com.artxp.artxp.api.mapper;
 
-import com.artxp.artxp.api.models.response.ArtistaDTO;
-import com.artxp.artxp.api.models.response.MovimientoArtisticoDTO;
-import com.artxp.artxp.api.models.response.ObraDTO;
-import com.artxp.artxp.api.models.response.TecnicaObraDTO;
-import com.artxp.artxp.domain.entities.ArtistaEntity;
-import com.artxp.artxp.domain.entities.MovimientoArtisticoEntity;
-import com.artxp.artxp.domain.entities.ObraEntity;
-import com.artxp.artxp.domain.entities.TecnicaObraEntity;
+import com.artxp.artxp.api.models.response.*;
+import com.artxp.artxp.domain.entities.*;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
@@ -23,12 +17,13 @@ public interface ObraMapper {
     @Mapping(source = "fechaCreacion", target = "fechaCreacion")
     @Mapping(source = "descripcion", target = "descripcion")
     @Mapping(source = "precioRenta", target = "precioRenta")
-    @Mapping(source = "img", target = "img")
+    @Mapping(source = "imagenes", target = "imagenes")
     @Mapping(source = "disponibilidad", target = "disponibilidad")
     @Mapping(source = "tamano", target = "tamano")
     @Mapping(source = "tecnicaObra", target = "tecnicaObra")
     @Mapping(source = "movimientoArtistico", target = "movimientoArtistico")
     @Mapping(source = "artista", target = "artista")
+
     ObraDTO obraEntityToDTO(ObraEntity obraEntity);
 
     @Mapping(source = "id", target = "id")
@@ -36,7 +31,7 @@ public interface ObraMapper {
     @Mapping(source = "fechaCreacion", target = "fechaCreacion")
     @Mapping(source = "descripcion", target = "descripcion")
     @Mapping(source = "precioRenta", target = "precioRenta")
-    @Mapping(source = "img", target = "img")
+    @Mapping(source = "imagenes", target = "imagenes")
     @Mapping(source = "disponibilidad", target = "disponibilidad")
     @Mapping(source = "tamano", target = "tamano")
     @Mapping(source = "tecnicaObra", target = "tecnicaObra")
@@ -70,4 +65,13 @@ public interface ObraMapper {
     @Mapping(source = "id", target = "id")
     @Mapping(source = "nombre", target = "nombre")
     TecnicaObraEntity tecnicaObraDTOToEntity(TecnicaObraDTO tecnicaObraDTO);
+
+    // Mapeo de Imagen
+    @Mapping(source = "id", target = "id")
+    @Mapping(source = "url", target = "url")
+    ImagenDTO imagenEntityToDTO(ImagenEntity imagenEntity);
+
+    @Mapping(source = "id", target = "id")
+    @Mapping(source = "url", target = "url")
+    ImagenEntity imagenDTOToEntity(ImagenDTO imagenDTO);
 }

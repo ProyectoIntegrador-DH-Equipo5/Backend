@@ -1,10 +1,7 @@
 package com.artxp.artxp.infrastructure.services;
 
 import com.artxp.artxp.api.mapper.ObraMapper;
-import com.artxp.artxp.api.models.response.ArtistaDTO;
-import com.artxp.artxp.api.models.response.MovimientoArtisticoDTO;
-import com.artxp.artxp.api.models.response.ObraDTO;
-import com.artxp.artxp.api.models.response.TecnicaObraDTO;
+import com.artxp.artxp.api.models.response.*;
 import com.artxp.artxp.domain.entities.ArtistaEntity;
 import com.artxp.artxp.domain.entities.MovimientoArtisticoEntity;
 import com.artxp.artxp.domain.entities.ObraEntity;
@@ -28,11 +25,14 @@ public class ObraService {
     private MovimientoArtisticoService movimientoArtisticoService;
     @Autowired
     private TecnicaObraService tecnicaObraService;
-
+    @Autowired
+    private ImagenService imagenService;
     private final ObraMapper mapper = ObraMapper.INSTANCE;
+
 
     // Guardar Obra
     public ObraDTO guardarObraNueva(ObraDTO obraDTO) {
+
         // Manejo de Artista
         ArtistaDTO artistaDTO = artistaService.buscarOCrearArtista(obraDTO.getArtista());
         ArtistaEntity artistaEntity = artistaService.findById(artistaDTO.getId());
@@ -71,6 +71,13 @@ public class ObraService {
             obraEntity = obraRepository.save(obraEntity);
         }
 
+        // Manejo de imágenes (hasta 5)
+        if (obraDTO.getImagenes() != null) {
+            for (ImagenDTO imagenDTO : obraDTO.getImagenes()) {
+                imagenService.guardarImagen(imagenDTO, obraEntity);
+            }
+        }
+
         return mapper.obraEntityToDTO(obraEntity);
     }
 
@@ -78,7 +85,18 @@ public class ObraService {
     public void eliminaObraPorID(Integer id) {
         ObraEntity obra = obraRepository.findById(id)
                 .orElseThrow(() -> new IdNotFoundException(id, "Obra"));
+        List<ImagenDTO> imagenes = imagenService.buscarImagenesPorObra(obra);
+        for (ImagenDTO imagenDTO : imagenes) {
+            imagenService.eliminaImagenPorID(imagenDTO.getId());
+        }
+
         obraRepository.delete(obra);
+    }
+
+    //Buscar Obra por ID
+    public ObraEntity buscarPorId(Integer id){
+        return obraRepository.findById(id)
+                .orElseThrow(()-> new IdNotFoundException(id, "Obra"));
     }
 
     // Retorna toda la lista de obras
