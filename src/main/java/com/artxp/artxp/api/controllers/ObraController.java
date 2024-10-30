@@ -18,6 +18,9 @@ public class ObraController {
 
     //----------------------- Mapeos -----------------------
 
+    // buasr por id
+    // este es para ahora
+
     // lista de obras
     @GetMapping("/listartodos")
     public ResponseEntity<List<ObraDTO>> listarTodo() {
@@ -30,11 +33,14 @@ public class ObraController {
         return ResponseEntity.ok(obraService.guardarObraNueva(obraDTO));
     }
 
-    //Eliminar
+  /*  //Eliminar
     @DeleteMapping("/{id}")
     public ResponseEntity<String> eliminarObraPorId(@PathVariable("id") Integer idEliminar) {
         obraService.eliminaObraPorID(idEliminar);
         return ResponseEntity.ok("Obra de Arte Eliminada");
     }
+*/
+    //editar por id
 
+    //paginar
 }

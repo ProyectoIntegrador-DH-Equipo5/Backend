@@ -7,6 +7,7 @@ import com.artxp.artxp.domain.entities.MovimientoArtisticoEntity;
 import com.artxp.artxp.domain.entities.ObraEntity;
 import com.artxp.artxp.domain.entities.TecnicaObraEntity;
 import com.artxp.artxp.domain.repositories.ObraRepository;
+import com.artxp.artxp.util.exeptions.ConflictException;
 import com.artxp.artxp.util.exeptions.IdNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,6 +33,42 @@ public class ObraService {
 
     // Guardar Obra
     public ObraDTO guardarObraNueva(ObraDTO obraDTO) {
+
+        // Verificar si la obra ya existe por ID
+        Optional<ObraEntity> obraEntityOptional = Optional.empty();
+        if (obraDTO.getNombre() != null) {
+            obraEntityOptional = obraRepository.findByNombre(obraDTO.getNombre());
+        }
+
+        ObraEntity obraEntity;
+
+        if (obraEntityOptional.isPresent()) {
+            throw new ConflictException("La obra ya existe.");
+        } else {
+            // Manejo de Artista
+            ArtistaDTO artistaDTO = artistaService.buscarOCrearArtista(obraDTO.getArtista());
+            ArtistaEntity artistaEntity = artistaService.findById(artistaDTO.getId());
+
+            // Manejo de MovimientoArtistico
+            MovimientoArtisticoDTO movimientoArtisticoDTO =
+                    movimientoArtisticoService.buscarOCrearMovimientoArtistico(obraDTO.getMovimientoArtistico());
+            MovimientoArtisticoEntity movimientoArtisticoEntity = movimientoArtisticoService.findById(movimientoArtisticoDTO.getId());
+
+            // Manejo de TecnicaObra
+            TecnicaObraDTO tecnicaObraDTO = tecnicaObraService.buscarOCrearTecnicaObra(obraDTO.getTecnicaObra());
+            TecnicaObraEntity tecnicaObraEntity = tecnicaObraService.findById(tecnicaObraDTO.getId());
+
+            // Crear ObraEntity
+            obraEntity = mapper.obraDTOToEntity(obraDTO);
+            obraEntity.setArtista(artistaEntity);
+            obraEntity.setMovimientoArtistico(movimientoArtisticoEntity);
+            obraEntity.setTecnicaObra(tecnicaObraEntity);
+            obraEntity = obraRepository.save(obraEntity);
+        }
+
+        return mapper.obraEntityToDTO(obraEntity);
+    }
+    /*public ObraDTO guardarObraNueva(ObraDTO obraDTO) {
 
         // Manejo de Artista
         ArtistaDTO artistaDTO = artistaService.buscarOCrearArtista(obraDTO.getArtista());
@@ -71,7 +108,7 @@ public class ObraService {
             obraEntity = obraRepository.save(obraEntity);
         }
 
-        // Manejo de imágenes (hasta 5)
+        // Manejo de imágenes
         if (obraDTO.getImagenes() != null) {
             for (ImagenDTO imagenDTO : obraDTO.getImagenes()) {
                 imagenService.guardarImagen(imagenDTO, obraEntity);
@@ -92,7 +129,7 @@ public class ObraService {
 
         obraRepository.delete(obra);
     }
-
+*/
     //Buscar Obra por ID
     public ObraEntity buscarPorId(Integer id){
         return obraRepository.findById(id)

@@ -8,6 +8,6 @@ import java.time.LocalDate;
 import java.util.Optional;
 
 public interface ObraRepository extends JpaRepository<ObraEntity,Integer> {
-    Optional<ObraEntity> findByNombreAndFechaCreacionAndArtista(String nombre, LocalDate fechaCreacion, ArtistaEntity artista);
+    Optional<ObraEntity> findByNombre(String nombre);
 
 }

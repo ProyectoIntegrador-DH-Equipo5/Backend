@@ -31,11 +31,6 @@ public class ObraEntity {
     @NonNull @Column(name="precio_renta")
     private Double precioRenta;
 
-    /*
-    @NonNull @Column(name="img")
-    private String img;
-    */
-
     @NonNull @Column(name="disponibilidad")
     private Boolean disponibilidad;
 
@@ -57,13 +52,10 @@ public class ObraEntity {
     @NonNull private ArtistaEntity artista;
 
     @OneToMany(mappedBy = "obra", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ImagenEntity> imagenes;
-    //private List<ImagenEntity> imagenes = new ArrayList<>(); //si permitimos guardar obras sin imagenes para no obtener un null
+    private List<ImagenEntity> imagenes = new ArrayList<>(); //si permitimos guardar obras sin imagenes para no obtener un null
 
     // Getters & Setters
-    public Integer getId() {
-        return id;
-    }
+    public Integer getId() { return id; }
 
     public void setId(Integer id) {
         this.id = id;
@@ -100,16 +92,6 @@ public class ObraEntity {
     public void setPrecioRenta(@NonNull Double precioRenta) {
         this.precioRenta = precioRenta;
     }
-
-    /*
-    public @NonNull String getImg() {
-        return img;
-    }
-
-    public void setImg(@NonNull String img) {
-        this.img = img;
-    }
-    */
 
     public @NonNull Boolean getDisponibilidad() {
         return disponibilidad;

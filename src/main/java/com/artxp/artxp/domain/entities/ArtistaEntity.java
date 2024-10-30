@@ -19,7 +19,6 @@ public class ArtistaEntity {
 
 
     // Getters & Setters
-
     public Integer getId() {
         return id;
     }

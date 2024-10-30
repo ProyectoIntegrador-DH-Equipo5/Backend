@@ -16,7 +16,6 @@ public class ObraDTO {
     private LocalDate fechaCreacion;
     private String descripcion;
     private Double precioRenta;
-    //private String img;
     private Boolean disponibilidad;
 
     //Enum de tamaños
@@ -69,15 +68,6 @@ public class ObraDTO {
         this.precioRenta = precioRenta;
     }
 
-    /*
-    public String getImg() {
-        return img;
-    }
-
-    public void setImg(String img) {
-        this.img = img;
-    }
-    */
 
     public Boolean getDisponibilidad() {
         return disponibilidad;
