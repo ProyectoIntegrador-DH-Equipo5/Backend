@@ -50,11 +50,11 @@ public interface ObraMapper {
 
     // Mapeo de MovimientoArtistico
     @Mapping(source = "id", target = "id")
-    @Mapping(source = "nombreMovimiento", target = "nombreMovimiento")
+    @Mapping(source = "nombre", target = "nombre")
     MovimientoArtisticoDTO movimientoArtisticoEntityToDTO(MovimientoArtisticoEntity movimientoArtisticoEntity);
 
     @Mapping(source = "id", target = "id")
-    @Mapping(source = "nombreMovimiento", target = "nombreMovimiento")
+    @Mapping(source = "nombre", target = "nombre")
     MovimientoArtisticoEntity movimientoArtisticoDTOToEntity(MovimientoArtisticoDTO movimientoArtisticoDTO);
 
     // Mapeo de TecnicaObra

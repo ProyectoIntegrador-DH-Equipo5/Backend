@@ -2,6 +2,7 @@ package com.artxp.artxp.api.controllers;
 
 import com.artxp.artxp.api.models.response.ObraDTO;
 import com.artxp.artxp.api.models.response.TecnicaObraDTO;
+import com.artxp.artxp.domain.entities.TecnicaObraEntity;
 import com.artxp.artxp.infrastructure.services.TecnicaObraService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -20,13 +21,13 @@ public class TecnicaObraController {
 
     // Buscar o crear una nueva técnica de obra
     @PostMapping
-    public ResponseEntity<TecnicaObraDTO> buscarOCrearTecnicaObra(@RequestBody TecnicaObraDTO tecnicaObraDTO) {
-        return ResponseEntity.ok(tecnicaObraService.buscarOCrearTecnicaObra(tecnicaObraDTO));
+    public ResponseEntity<TecnicaObraEntity> buscarOCrearTecnicaObra(@RequestBody TecnicaObraEntity tecnicaObraEntity) {
+        return ResponseEntity.ok(tecnicaObraService.buscarOCrearTecnicaObra(tecnicaObraEntity));
     }
 
     // lista de tecnicas
     @GetMapping("/listartodos")
-    public ResponseEntity<List<TecnicaObraDTO>> listarTodo() {
+    public ResponseEntity<List<TecnicaObraEntity>> listarTodo() {
         return ResponseEntity.ok(tecnicaObraService.buscarTodasLasTecnicas());
     }
 }

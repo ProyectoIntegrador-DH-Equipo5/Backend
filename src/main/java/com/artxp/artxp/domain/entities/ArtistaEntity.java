@@ -17,6 +17,13 @@ public class ArtistaEntity {
     @NonNull
     private String nombre;
 
+    @Override
+    public String toString() {
+        return "ArtistaEntity{" +
+                "id=" + id +
+                ", nombre='" + nombre + '\'' +
+                '}';
+    }
 
     // Getters & Setters
     public Integer getId() {

@@ -16,9 +16,15 @@ public class MovimientoArtisticoEntity {
 
     @Column(name="nombre_movimiento")
     @NonNull
-    private String nombreMovimiento;
+    private String nombre;
 
-    // Getters & Setters
+    @Override
+    public String toString() {
+        return "MovimientoArtisticoEntity{" +
+                "id=" + id +
+                ", nombre='" + nombre + '\'' +
+                '}';
+    }
 
     public Integer getId() {
         return id;
@@ -28,11 +34,11 @@ public class MovimientoArtisticoEntity {
         this.id = id;
     }
 
-    public @NonNull String getNombreMovimiento() {
-        return nombreMovimiento;
+    public @NonNull String getNombre() {
+        return nombre;
     }
 
-    public void setNombreMovimiento(@NonNull String nombreMovimiento) {
-        this.nombreMovimiento = nombreMovimiento;
+    public void setNombre(@NonNull String nombre) {
+        this.nombre = nombre;
     }
 }

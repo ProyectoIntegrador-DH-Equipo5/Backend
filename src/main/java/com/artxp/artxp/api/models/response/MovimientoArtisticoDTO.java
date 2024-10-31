@@ -8,7 +8,7 @@ import lombok.*;
 public class MovimientoArtisticoDTO {
 
     private Integer id;
-    private String nombreMovimiento;
+    private String nombre;
 
     public Integer getId() {
         return id;
@@ -18,11 +18,11 @@ public class MovimientoArtisticoDTO {
         this.id = id;
     }
 
-    public String getNombreMovimiento() {
-        return nombreMovimiento;
+    public String getNombre() {
+        return nombre;
     }
 
-    public void setNombreMovimiento(String nombreMovimiento) {
-        this.nombreMovimiento = nombreMovimiento;
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
     }
 }

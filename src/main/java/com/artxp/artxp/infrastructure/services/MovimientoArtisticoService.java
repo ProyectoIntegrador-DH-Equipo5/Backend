@@ -2,7 +2,6 @@ package com.artxp.artxp.infrastructure.services;
 
 import com.artxp.artxp.api.mapper.ObraMapper;
 import com.artxp.artxp.api.models.response.ArtistaDTO;
-import com.artxp.artxp.api.models.response.MovimientoArtisticoDTO;
 import com.artxp.artxp.domain.entities.ArtistaEntity;
 import com.artxp.artxp.domain.entities.MovimientoArtisticoEntity;
 import com.artxp.artxp.domain.repositories.MovimientoArtisticoRepository;
@@ -21,19 +20,26 @@ public class MovimientoArtisticoService {
     private final ObraMapper mapper = ObraMapper.INSTANCE;
 
     // Se busca un movimiento artistico por el nombre en caso de que exista se retorna el DTO, si no existe se crea
-    public MovimientoArtisticoDTO buscarOCrearMovimientoArtistico(MovimientoArtisticoDTO movimientoArtisticoDTO) {
+    public MovimientoArtisticoEntity buscarOCrearMovimientoArtistico(MovimientoArtisticoEntity movimientoArtisticoEntity) {
+        System.out.println("Buscando movimiento con nombre: " + movimientoArtisticoEntity.getNombre());
         Optional<MovimientoArtisticoEntity> movimientoArtisticoEntityOptional =
-                movRepository.findByNombreMovimiento(movimientoArtisticoDTO.getNombreMovimiento()).stream().findFirst();
-        MovimientoArtisticoEntity movimientoArtisticoEntity;
+                movRepository.findByNombre(movimientoArtisticoEntity.getNombre()).stream().findFirst();
+
+        MovimientoArtisticoEntity movimientoArtisticoEntityResult;
 
         if (movimientoArtisticoEntityOptional.isPresent()) {
-            movimientoArtisticoEntity = movimientoArtisticoEntityOptional.get();
+            movimientoArtisticoEntityResult = movimientoArtisticoEntityOptional.get();
+            System.out.println("Movimiento encontrado: " + movimientoArtisticoEntityResult.getId());
         } else {
-            movimientoArtisticoEntity = mapper.movimientoArtisticoDTOToEntity(movimientoArtisticoDTO);
-            movimientoArtisticoEntity = movRepository.save(movimientoArtisticoEntity);
+            System.out.println("Creando nuevo movimiento: " + movimientoArtisticoEntity.getNombre());
+
+            // Guardar la entidad y hacer flush para asegurar que el ID se genere
+            movimientoArtisticoEntityResult = movRepository.saveAndFlush(movimientoArtisticoEntity);
+
+            System.out.println("Nuevo movimiento guardado con ID: " + movimientoArtisticoEntityResult.getId());
         }
 
-        return mapper.movimientoArtisticoEntityToDTO(movimientoArtisticoEntity);
+        return movimientoArtisticoEntityResult;
     }
 
     // Buscar movimiento artistico por ID
@@ -43,10 +49,10 @@ public class MovimientoArtisticoService {
     }
 
     // Retorna toda la lista de movimientos artisticos
-    public List<MovimientoArtisticoDTO> buscarTodosLosMovArtisticos() {
+    public List<MovimientoArtisticoEntity> buscarTodosLosMovArtisticos() {
         List<MovimientoArtisticoEntity> movArtisticos = movRepository.findAll();
-        // Se convierten las entities a DTOs
-        return movArtisticos.stream().map(mapper::movimientoArtisticoEntityToDTO).collect(Collectors.toList());
+
+        return movArtisticos;
     }
 
 }

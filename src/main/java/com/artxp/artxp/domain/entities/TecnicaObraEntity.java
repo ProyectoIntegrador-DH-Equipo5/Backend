@@ -17,6 +17,14 @@ public class TecnicaObraEntity {
     @NonNull
     private String nombre;
 
+    @Override
+    public String toString() {
+        return "TecnicaObraEntity{" +
+                "id=" + id +
+                ", nombre='" + nombre + '\'' +
+                '}';
+    }
+
     // Getters & Setters
 
 

@@ -1,7 +1,6 @@
 package com.artxp.artxp.infrastructure.services;
 
 import com.artxp.artxp.api.mapper.ObraMapper;
-import com.artxp.artxp.api.models.response.ArtistaDTO;
 import com.artxp.artxp.api.models.response.ObraDTO;
 import com.artxp.artxp.domain.entities.ArtistaEntity;
 import com.artxp.artxp.domain.entities.ObraEntity;
@@ -23,29 +22,26 @@ public class ArtistaService {
     private final ObraMapper mapper = ObraMapper.INSTANCE;
 
     // Se busca un artista por el nombre en caso de que exista se retorna el DTO, si no existe se crea
-    public ArtistaDTO buscarOCrearArtista(ArtistaDTO artistaDTO) {
-        System.out.println("Buscando artista con nombre: " + artistaDTO.getNombre());
+    public ArtistaEntity buscarOCrearArtista(ArtistaEntity artistaEntity) {
+        System.out.println("Buscando artista con nombre: " + artistaEntity.getNombre());
         Optional<ArtistaEntity> artistaEntityOptional =
-                artistaRepository.findByNombre(artistaDTO.getNombre()).stream().findFirst();
-        ArtistaEntity artistaEntity;
+                artistaRepository.findByNombre(artistaEntity.getNombre()).stream().findFirst();
+
+        ArtistaEntity artistaEntityResult;
 
         if (artistaEntityOptional.isPresent()) {
-            artistaEntity = artistaEntityOptional.get();
-            System.out.println("Artista encontrado: " + artistaEntity.getId());
+            artistaEntityResult = artistaEntityOptional.get();
+            System.out.println("Artista encontrado: " + artistaEntityResult.getId());
         } else {
-            artistaEntity = mapper.artistaDTOToEntity(artistaDTO);
             System.out.println("Creando nuevo artista: " + artistaEntity.getNombre());
-            System.out.println("ID antes de guardar: " + artistaEntity.getId());
 
             // Guardar la entidad y hacer flush para asegurar que el ID se genere
-            artistaEntity = artistaRepository.saveAndFlush(artistaEntity);
+            artistaEntityResult = artistaRepository.saveAndFlush(artistaEntity);
 
-            System.out.println("Nuevo artista guardado con ID: " + artistaEntity.getId());
+            System.out.println("Nuevo artista guardado con ID: " + artistaEntityResult.getId());
         }
 
-        ArtistaDTO resultDTO = mapper.artistaEntityToDTO(artistaEntity);
-        System.out.println("Retornando ArtistaDTO con ID: " + resultDTO.getId());
-        return resultDTO;
+        return artistaEntityResult;
     }
 
     // Buscar artista por ID
@@ -55,9 +51,9 @@ public class ArtistaService {
     }
 
     // Retorna toda la lista de artistas
-    public List<ArtistaDTO> buscarTodosLosArtistas() {
+    public List<ArtistaEntity> buscarTodosLosArtistas() {
         List<ArtistaEntity> artistas = artistaRepository.findAll();
-        // Se convierten las entities a DTOs
-        return artistas.stream().map(mapper::artistaEntityToDTO).collect(Collectors.toList());
+
+        return artistas;
     }
 }

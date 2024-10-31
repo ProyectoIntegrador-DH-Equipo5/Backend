@@ -1,5 +1,7 @@
 package com.artxp.artxp.domain.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -26,6 +28,7 @@ public class ImagenEntity {
     private String imagenId;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
     @JoinColumn(name = "obra_id", nullable = true)
     private ObraEntity obra;
 
@@ -43,6 +46,17 @@ public class ImagenEntity {
     }
 
     public ImagenEntity() {
+    }
+
+    @Override
+    public String toString() {
+        return "ImagenEntity{" +
+                "id=" + id +
+                ", nombre='" + nombre + '\'' +
+                ", url='" + url + '\'' +
+                ", imagenId='" + imagenId + '\'' +
+                ", obra=" + obra +
+                '}';
     }
 
     // Getters & Setters

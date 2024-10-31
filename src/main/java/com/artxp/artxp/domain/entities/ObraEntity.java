@@ -1,6 +1,7 @@
 package com.artxp.artxp.domain.entities;
 
 import com.artxp.artxp.util.Sizes;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -52,7 +53,25 @@ public class ObraEntity {
     @NonNull private ArtistaEntity artista;
 
     @OneToMany(mappedBy = "obra", cascade = CascadeType.ALL, orphanRemoval = true)
+
     private List<ImagenEntity> imagenes = new ArrayList<>(); //si permitimos guardar obras sin imagenes para no obtener un null
+
+    @Override
+    public String toString() {
+        return "ObraEntity{" +
+                "id=" + id +
+                ", nombre='" + nombre + '\'' +
+                ", fechaCreacion=" + fechaCreacion +
+                ", descripcion='" + descripcion + '\'' +
+                ", precioRenta=" + precioRenta +
+                ", disponibilidad=" + disponibilidad +
+                ", tamano=" + tamano +
+                ", tecnicaObra=" + tecnicaObra +
+                ", movimientoArtistico=" + movimientoArtistico +
+                ", artista=" + artista +
+                ", imagenes=" + imagenes +
+                '}';
+    }
 
     // Getters & Setters
     public Integer getId() { return id; }

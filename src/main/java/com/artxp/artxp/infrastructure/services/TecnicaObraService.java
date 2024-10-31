@@ -2,7 +2,6 @@ package com.artxp.artxp.infrastructure.services;
 
 import com.artxp.artxp.api.mapper.ObraMapper;
 import com.artxp.artxp.api.models.response.ArtistaDTO;
-import com.artxp.artxp.api.models.response.TecnicaObraDTO;
 import com.artxp.artxp.domain.entities.ArtistaEntity;
 import com.artxp.artxp.domain.entities.TecnicaObraEntity;
 import com.artxp.artxp.domain.repositories.TecnicaObraRepository;
@@ -27,19 +26,26 @@ public class TecnicaObraService {
     private final ObraMapper mapper = ObraMapper.INSTANCE;
 
     // Se busca una técnica de obra por el nombre en caso de que exista se retorna el DTO, si no existe se crea
-    public TecnicaObraDTO buscarOCrearTecnicaObra(TecnicaObraDTO tecnicaObraDTO) {
+    public TecnicaObraEntity buscarOCrearTecnicaObra(TecnicaObraEntity tecnicaObraEntity) {
+        System.out.println("Buscando tecnica con nombre: " + tecnicaObraEntity.getNombre());
         Optional<TecnicaObraEntity> tecnicaObraEntityOptional =
-                tecnicaObraRepository.findByNombre(tecnicaObraDTO.getNombre()).stream().findFirst();
-        TecnicaObraEntity tecnicaObraEntity;
+                tecnicaObraRepository.findByNombre(tecnicaObraEntity.getNombre()).stream().findFirst();
+
+        TecnicaObraEntity tecnicaObraEntityResult;
 
         if (tecnicaObraEntityOptional.isPresent()) {
-            tecnicaObraEntity = tecnicaObraEntityOptional.get();
+            tecnicaObraEntityResult = tecnicaObraEntityOptional.get();
+            System.out.println("Tecnica encontrado: " + tecnicaObraEntityResult.getId());
         } else {
-            tecnicaObraEntity = mapper.tecnicaObraDTOToEntity(tecnicaObraDTO);
-            tecnicaObraEntity = tecnicaObraRepository.save(tecnicaObraEntity);
+            System.out.println("Creando nuevo tecnica: " + tecnicaObraEntity.getNombre());
+
+            // Guardar la entidad y hacer flush para asegurar que el ID se genere
+            tecnicaObraEntityResult = tecnicaObraRepository.saveAndFlush(tecnicaObraEntity);
+
+            System.out.println("Nuevo tecnica guardado con ID: " + tecnicaObraEntityResult.getId());
         }
 
-        return mapper.tecnicaObraEntityToDTO(tecnicaObraEntity);
+        return tecnicaObraEntityResult;
     }
 
 
@@ -50,9 +56,9 @@ public class TecnicaObraService {
     }
 
     // Retorna toda la lista de tecnicas
-    public List<TecnicaObraDTO> buscarTodasLasTecnicas() {
+    public List<TecnicaObraEntity> buscarTodasLasTecnicas() {
         List<TecnicaObraEntity> tecnicas = tecnicaObraRepository.findAll();
-        // Se convierten las entities a DTOs
-        return tecnicas.stream().map(mapper::tecnicaObraEntityToDTO).collect(Collectors.toList());
+
+        return tecnicas;
     }
 }
