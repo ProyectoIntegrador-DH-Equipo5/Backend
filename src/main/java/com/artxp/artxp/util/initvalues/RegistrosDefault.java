@@ -1,10 +1,9 @@
 package com.artxp.artxp.util.initvalues;
-
+/*
 import com.artxp.artxp.api.models.response.ArtistaDTO;
-import com.artxp.artxp.domain.entities.ArtistaEntity;
-import com.artxp.artxp.domain.entities.MovimientoArtisticoEntity;
-import com.artxp.artxp.domain.entities.ObraEntity;
-import com.artxp.artxp.domain.entities.TecnicaObraEntity;
+import com.artxp.artxp.api.models.response.MovimientoArtisticoDTO;
+import com.artxp.artxp.api.models.response.ObraDTO;
+import com.artxp.artxp.api.models.response.TecnicaObraDTO;
 import com.artxp.artxp.infrastructure.services.ObraService;
 import com.artxp.artxp.util.Sizes;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,53 +20,53 @@ public class RegistrosDefault implements ApplicationRunner {
     ObraService obraService;
 
     //  -----------  Insercion de datos de Ejemplo -----------
+
     @Override
     public void run(ApplicationArguments args) throws Exception {
-
-        //***** Artista *****
-        ArtistaEntity artista1 = ArtistaEntity.builder()
-                .nombre(" artistaEjemplo1")
+        // Artista
+        ArtistaDTO artista1 = ArtistaDTO.builder()
+                .nombre("artistaEjemplo1")
                 .build();
 
-        ArtistaEntity artista2 = ArtistaEntity.builder()
-                .nombre(" artistaEjemplo2")
+        ArtistaDTO artista2 = ArtistaDTO.builder()
+                .nombre("artistaEjemplo2")
                 .build();
 
-        ArtistaEntity artista3 = ArtistaEntity.builder()
-                .nombre(" artistaEjemplo3")
+        ArtistaDTO artista3 = ArtistaDTO.builder()
+                .nombre("artistaEjemplo3")
                 .build();
 
-        //***** Movimiento *****
-        MovimientoArtisticoEntity mov1 = MovimientoArtisticoEntity.builder()
-                .NombreMovimiento("Renacentista")
+        // Movimiento
+        MovimientoArtisticoDTO mov1 = MovimientoArtisticoDTO.builder()
+                .nombreMovimiento("Renacentista")
                 .build();
 
-        MovimientoArtisticoEntity mov2 = MovimientoArtisticoEntity.builder()
-                .NombreMovimiento("Barroco")
+        MovimientoArtisticoDTO mov2 = MovimientoArtisticoDTO.builder()
+                .nombreMovimiento("Barroco")
                 .build();
 
-        MovimientoArtisticoEntity mov3 = MovimientoArtisticoEntity.builder()
-                .NombreMovimiento("Gotico")
+        MovimientoArtisticoDTO mov3 = MovimientoArtisticoDTO.builder()
+                .nombreMovimiento("Gotico")
                 .build();
 
-        //***** Tecnica *****
-        TecnicaObraEntity tecnica1 = TecnicaObraEntity.builder()
+        // Tecnica
+        TecnicaObraDTO tecnica1 = TecnicaObraDTO.builder()
                 .nombre("Dibujo en carboncillo")
                 .build();
 
-        TecnicaObraEntity tecnica2 = TecnicaObraEntity.builder()
+        TecnicaObraDTO tecnica2 = TecnicaObraDTO.builder()
                 .nombre("Pintura al oleo")
                 .build();
 
-        TecnicaObraEntity tecnica3 = TecnicaObraEntity.builder()
+        TecnicaObraDTO tecnica3 = TecnicaObraDTO.builder()
                 .nombre("Aquarela")
                 .build();
 
-        //***** Obra *****
-        ObraEntity obra1 = ObraEntity.builder()
+        // Obra
+        ObraDTO obra1 = ObraDTO.builder()
                 .nombre("Cielo Estrellado")
                 .fechaCreacion(LocalDate.of(1872, 7, 13))
-                .descripcion(" es una obra muy bonita :D")
+                .descripcion("es una obra muy bonita :D")
                 .precioRenta(123456d)
                 .img("/images/img1.jpg")
                 .disponibilidad(true)
@@ -79,11 +78,10 @@ public class RegistrosDefault implements ApplicationRunner {
 
         obraService.guardarObraNueva(obra1);
 
-
-        ObraEntity obra2 = ObraEntity.builder()
+        ObraDTO obra2 = ObraDTO.builder()
                 .nombre("Mona Lissa")
                 .fechaCreacion(LocalDate.of(1857, 8, 30))
-                .descripcion(" esto es arte, aprecienloo!!!")
+                .descripcion("esto es arte, aprecienloo!!!")
                 .precioRenta(999999999d)
                 .img("/images/img2.jpg")
                 .disponibilidad(false)
@@ -95,12 +93,10 @@ public class RegistrosDefault implements ApplicationRunner {
 
         obraService.guardarObraNueva(obra2);
 
-
-
-        ObraEntity obra3 = ObraEntity.builder()
+        ObraDTO obra3 = ObraDTO.builder()
                 .nombre("el Grito D=")
                 .fechaCreacion(LocalDate.of(2000, 7, 13))
-                .descripcion(" aaaaaaaaaaaaa")
+                .descripcion("aaaaaaaaaaaaa")
                 .precioRenta(3000d)
                 .img("/images/img3.jpg")
                 .disponibilidad(true)
@@ -111,11 +107,7 @@ public class RegistrosDefault implements ApplicationRunner {
                 .build();
 
         obraService.guardarObraNueva(obra3);
-
-
-
     }
 
-
-
 }
+*/

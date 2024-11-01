@@ -1,10 +1,33 @@
 package com.artxp.artxp.api.controllers;
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.artxp.artxp.api.models.response.ObraDTO;
+import com.artxp.artxp.api.models.response.TecnicaObraDTO;
+import com.artxp.artxp.domain.entities.TecnicaObraEntity;
+import com.artxp.artxp.infrastructure.services.TecnicaObraService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
-@RequestMapping(path="/tecnica")
+@RequestMapping(path="/tecnicaObra")
 public class TecnicaObraController {
-    //easter egg :DDD
+    //----------------------- Dependencias -----------------------
+    @Autowired
+    private TecnicaObraService tecnicaObraService;
+
+    //----------------------- Mapeos -----------------------
+
+    // Buscar o crear una nueva técnica de obra
+    @PostMapping
+    public ResponseEntity<TecnicaObraEntity> buscarOCrearTecnicaObra(@RequestBody TecnicaObraEntity tecnicaObraEntity) {
+        return ResponseEntity.ok(tecnicaObraService.buscarOCrearTecnicaObra(tecnicaObraEntity));
+    }
+
+    // lista de tecnicas
+    @GetMapping("/listartodos")
+    public ResponseEntity<List<TecnicaObraEntity>> listarTodo() {
+        return ResponseEntity.ok(tecnicaObraService.buscarTodasLasTecnicas());
+    }
 }
