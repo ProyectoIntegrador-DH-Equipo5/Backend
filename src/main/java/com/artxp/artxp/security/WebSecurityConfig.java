@@ -10,6 +10,7 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 @EnableWebSecurity
 public class WebSecurityConfig {
 
+    /*
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
@@ -18,6 +19,17 @@ public class WebSecurityConfig {
                 )
                 .csrf(csrf -> csrf.disable()); // Disable CSRF (Cross-Site Request Forgery)
 
+        return http.build();
+    }*/
+
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http
+                .csrf(csrf -> csrf.disable()) // Deshabilitar protección CSRF
+                .headers(headers -> headers.frameOptions(frameOptions -> frameOptions.disable())) // Habilitar consola H2
+                .authorizeHttpRequests(authz -> authz
+                        .anyRequest().permitAll() // Permitir acceso sin autenticación a todas las peticiones
+                );
         return http.build();
     }
 }
