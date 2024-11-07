@@ -1,6 +1,6 @@
 package com.artxp.artxp.api.controllers;
 
-import com.artxp.artxp.api.mapper.ObraMapper;
+//import com.artxp.artxp.api.mapper.ObraMapper;
 import com.artxp.artxp.api.models.response.ObraDTO;
 import com.artxp.artxp.api.models.response.TecnicaObraDTO;
 import com.artxp.artxp.domain.entities.ImagenEntity;
@@ -37,7 +37,7 @@ public class ObraController {
     @Autowired
     private CloudinaryService cloudinaryService;
 
-    private final ObraMapper mapper = ObraMapper.INSTANCE;
+//    private final ObraMapper mapper = ObraMapper.INSTANCE;
 
     //----------------------- Mapeos -----------------------
 
@@ -46,7 +46,7 @@ public class ObraController {
 
     // lista de obras
     @GetMapping("/listartodos")
-    public ResponseEntity<List<ObraDTO>> listarTodo() {
+    public ResponseEntity<List<ObraEntity>> listarTodo() {
         return ResponseEntity.ok(obraService.buscarTodasLasObras());
     }
 

@@ -6,10 +6,10 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity(name = "imagen")
-//@NoArgsConstructor
-//@AllArgsConstructor
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
-//@RequiredArgsConstructor
+@Data
 public class ImagenEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,61 +43,5 @@ public class ImagenEntity {
         this.nombre = nombre;
         this.url = url;
         this.imagenId = imagenId;
-    }
-
-    public ImagenEntity() {
-    }
-
-    @Override
-    public String toString() {
-        return "ImagenEntity{" +
-                "id=" + id +
-                ", nombre='" + nombre + '\'' +
-                ", url='" + url + '\'' +
-                ", imagenId='" + imagenId + '\'' +
-                ", obra=" + obra +
-                '}';
-    }
-
-    // Getters & Setters
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public String getImagenId() {
-        return imagenId;
-    }
-
-    public void setImagenId(String imagenId) {
-        this.imagenId = imagenId;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
-    public ObraEntity getObra() {
-        return obra;
-    }
-
-    public void setObra(ObraEntity obra) {
-        this.obra = obra;
     }
 }

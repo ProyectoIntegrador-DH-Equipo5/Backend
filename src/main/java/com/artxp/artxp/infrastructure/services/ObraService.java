@@ -1,9 +1,10 @@
 package com.artxp.artxp.infrastructure.services;
 
-import com.artxp.artxp.api.mapper.ObraMapper;
+//import com.artxp.artxp.api.mapper.ObraMapper;
 import com.artxp.artxp.api.models.response.*;
 import com.artxp.artxp.domain.entities.*;
 import com.artxp.artxp.domain.repositories.ObraRepository;
+import com.artxp.artxp.util.exeptions.BadRequestException;
 import com.artxp.artxp.util.exeptions.ConflictException;
 import com.artxp.artxp.util.exeptions.IdNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +35,7 @@ public class ObraService {
     private ImagenService imagenService;
     @Autowired
     private CloudinaryService cloudinaryService;
-    private final ObraMapper mapper = ObraMapper.INSTANCE;
+//    private final ObraMapper mapper = ObraMapper.INSTANCE;
 
     //Buscar Obra por ID
     public ObraEntity buscarPorId(Integer id){
@@ -43,14 +44,15 @@ public class ObraService {
     }
 
     // Retorna toda la lista de obras
-    public List<ObraDTO> buscarTodasLasObras() {
-        List<ObraEntity> obras = obraRepository.findAll();
+    public List<ObraEntity> buscarTodasLasObras() {
+        return obraRepository.findAll();
         // Se convierten las entities a DTOs
-        return obras.stream().map(mapper::obraEntityToDTO).collect(Collectors.toList());
+        // return obras.stream().map(mapper::obraEntityToDTO).collect(Collectors.toList());
     }
 
     // Guardar Obra
     public ObraEntity guardarObraNueva(ObraEntity obra, MultipartFile[] files) {
+
         // Verificar si la obra ya existe por nombre
         Optional<ObraEntity> obraEntityOptional = Optional.empty();
         if (obra.getNombre() != null) {
@@ -95,7 +97,7 @@ public class ObraService {
                             (String) result.get("url"),
                             (String) result.get("public_id")
                     );
-                    imagen.setObra(savedObraEntity); // Asociar a la entidad guardada
+                    imagen.setObra(savedObraEntity); // Asociar a la entidad Obra guardada
                     imagenEntities.add(imagen);
                 } catch (IOException e) {
                     throw new ConflictException("Error al subir las imágenes." + e.getMessage());
@@ -110,16 +112,11 @@ public class ObraService {
     }
 
     public void eliminaObraPorID(Integer idEliminar) {
-        ObraEntity obraEntity = buscarPorId(idEliminar);
-        obraRepository.delete(obraEntity);
+        Optional<ObraEntity> obraBuscada = Optional.ofNullable(buscarPorId(idEliminar));
+        if (obraBuscada.isPresent()) {
+            obraRepository.delete(obraBuscada.get());
+        } else {
+            throw new BadRequestException();
+        }
     }
-    // Ejemplo de validación para delete
-    /*Optional<Obra> obraBuscada = this.buscarPorID(id);
-        if(obraBuscada.isPresent()){
-        obraBuscada.eliminarPaciente(id);
-
-    }else{
-        throw new BadRequestException("Obra no encontrada");
-    }
-     */
 }

@@ -1,16 +1,11 @@
 package com.artxp.artxp.infrastructure.services;
 
-import com.artxp.artxp.api.mapper.ObraMapper;
-import com.artxp.artxp.api.models.response.ArtistaDTO;
-import com.artxp.artxp.domain.entities.ArtistaEntity;
+import com.artxp.artxp.domain.entities.ObraEntity;
 import com.artxp.artxp.domain.entities.TecnicaObraEntity;
+import com.artxp.artxp.domain.repositories.ObraRepository;
 import com.artxp.artxp.domain.repositories.TecnicaObraRepository;
+import com.artxp.artxp.util.exeptions.ConflictException;
 import com.artxp.artxp.util.exeptions.IdNotFoundException;
-import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,8 +17,11 @@ import java.util.stream.Collectors;
 public class TecnicaObraService {
     @Autowired
     private TecnicaObraRepository tecnicaObraRepository;
+    @Autowired
+    private ObraRepository obraRepository;
 
-    private final ObraMapper mapper = ObraMapper.INSTANCE;
+
+//    private final ObraMapper mapper = ObraMapper.INSTANCE;
 
     // Se busca una técnica de obra por el nombre en caso de que exista se retorna el DTO, si no existe se crea
     public TecnicaObraEntity buscarOCrearTecnicaObra(TecnicaObraEntity tecnicaObraEntity) {
@@ -34,8 +32,10 @@ public class TecnicaObraService {
         TecnicaObraEntity tecnicaObraEntityResult;
 
         if (tecnicaObraEntityOptional.isPresent()) {
-            tecnicaObraEntityResult = tecnicaObraEntityOptional.get();
-            System.out.println("Tecnica encontrado: " + tecnicaObraEntityResult.getId());
+            System.out.println("Tecnica encontrado: " + tecnicaObraEntityOptional.get().getId());
+            throw new ConflictException("La técnica ya existe.");
+//            tecnicaObraEntityResult = tecnicaObraEntityOptional.get();
+
         } else {
             System.out.println("Creando nuevo tecnica: " + tecnicaObraEntity.getNombre());
 
@@ -48,9 +48,9 @@ public class TecnicaObraService {
         return tecnicaObraEntityResult;
     }
 
-
     // Buscar Tecnica obra por ID
     public TecnicaObraEntity findById(Integer id) {
+        System.out.println("El id es: " + id);
         return tecnicaObraRepository.findById(id)
                 .orElseThrow(() -> new IdNotFoundException(id, "TecnicaObra"));
     }
@@ -58,7 +58,51 @@ public class TecnicaObraService {
     // Retorna toda la lista de tecnicas
     public List<TecnicaObraEntity> buscarTodasLasTecnicas() {
         List<TecnicaObraEntity> tecnicas = tecnicaObraRepository.findAll();
-
         return tecnicas;
+    }
+
+    //Buscar Obras con la Tecnica buscada
+    public List<ObraEntity> obrasConTecnica(Integer tecnicaId) throws RuntimeException {
+        Optional<TecnicaObraEntity> tecnicaBuscada = Optional.ofNullable(findById(tecnicaId));
+        if (tecnicaBuscada.isPresent()) {
+            return obraRepository.findByTecnicaObra(tecnicaBuscada.get()).get();
+        } else {
+            throw new IdNotFoundException(tecnicaId, "Técnica");
+        }
+    }
+
+    // Eliminar tecnica
+    public void eliminarTecnicaPorId(Integer id) {
+        // Buscar la técnica, lanzar excepción si no existe
+        TecnicaObraEntity tecnicaBuscada = tecnicaObraRepository.findById(id)
+                .orElseThrow(() -> new IdNotFoundException(id, "Técnica"));
+
+        // Verificar si la técnica está asociada a alguna obra
+        List<ObraEntity> obrasAsociadas = obrasConTecnica(id);
+        if (!obrasAsociadas.isEmpty()) {
+            // Crear un mensaje que incluya los nombres de las obras asociadas
+            String mensajeError = "No se puede eliminar la técnica, ya que está asociada a las siguientes obras: " +
+                    obrasAsociadas.stream()
+                            .map(ObraEntity::getNombre)
+                            .collect(Collectors.joining(", "));
+            throw new ConflictException(mensajeError);
+        }
+
+        // Si no hay obras asociadas, eliminar la técnica
+        tecnicaObraRepository.deleteById(id);
+    }
+
+    //Actualizar tecnica
+    public TecnicaObraEntity actualizarTecnica(TecnicaObraEntity tecnicaActualizada){
+        // Buscar la técnica, lanzar excepción si no existe
+        TecnicaObraEntity tecnicaBuscada = tecnicaObraRepository.findById(tecnicaActualizada.getId())
+                .orElseThrow(() -> new IdNotFoundException(tecnicaActualizada.getId(), "Técnica"));
+
+        TecnicaObraEntity tecnicaActualizacion = TecnicaObraEntity.builder()
+                .id(tecnicaBuscada.getId())
+                .nombre(tecnicaActualizada.getNombre())
+                .build();
+//        System.out.println("___________________>>>>>>>>>>>>>>>>"+tecnicaActualizacion);
+        return tecnicaObraRepository.save(tecnicaActualizacion);
     }
 }

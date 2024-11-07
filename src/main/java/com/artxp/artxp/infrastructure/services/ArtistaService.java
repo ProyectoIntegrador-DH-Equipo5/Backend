@@ -1,6 +1,6 @@
 package com.artxp.artxp.infrastructure.services;
 
-import com.artxp.artxp.api.mapper.ObraMapper;
+//import com.artxp.artxp.api.mapper.ObraMapper;
 import com.artxp.artxp.api.models.response.ObraDTO;
 import com.artxp.artxp.domain.entities.ArtistaEntity;
 import com.artxp.artxp.domain.entities.ObraEntity;
@@ -19,7 +19,7 @@ public class ArtistaService {
     @Autowired
     private ArtistaRepository artistaRepository;
 
-    private final ObraMapper mapper = ObraMapper.INSTANCE;
+//    private final ObraMapper mapper = ObraMapper.INSTANCE;
 
     // Se busca un artista por el nombre en caso de que exista se retorna el DTO, si no existe se crea
     public ArtistaEntity buscarOCrearArtista(ArtistaEntity artistaEntity) {
@@ -56,4 +56,6 @@ public class ArtistaService {
 
         return artistas;
     }
+
+
 }

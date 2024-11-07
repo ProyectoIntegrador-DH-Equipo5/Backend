@@ -103,12 +103,13 @@
 			<version>3.0.0</version>
 		</dependency>
 		<!--Mapstruct -->
+		<!--
 		<dependency>
 			<groupId>org.mapstruct</groupId>
 			<artifactId>mapstruct</artifactId>
 			<version>1.6.2</version>
 		</dependency>
-
+		-->
 	</dependencies>
 
 	<build>
@@ -125,7 +126,7 @@
 					</excludes>
 				</configuration>
 			</plugin>
-			<!--Mapstruct -->
+			<!--Mapstruct
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -141,7 +142,7 @@
 						</path>
 					</annotationProcessorPaths>
 				</configuration>
-			</plugin>
+			</plugin>-->
 		</plugins>
 	</build>
 

@@ -7,7 +7,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@RequiredArgsConstructor
+@Data
 public class MovimientoArtisticoEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,27 +18,4 @@ public class MovimientoArtisticoEntity {
     @NonNull
     private String nombre;
 
-    @Override
-    public String toString() {
-        return "MovimientoArtisticoEntity{" +
-                "id=" + id +
-                ", nombre='" + nombre + '\'' +
-                '}';
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public @NonNull String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(@NonNull String nombre) {
-        this.nombre = nombre;
-    }
 }

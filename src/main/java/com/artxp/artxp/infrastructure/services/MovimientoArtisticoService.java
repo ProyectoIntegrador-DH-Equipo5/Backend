@@ -1,6 +1,6 @@
 package com.artxp.artxp.infrastructure.services;
 
-import com.artxp.artxp.api.mapper.ObraMapper;
+//import com.artxp.artxp.api.mapper.ObraMapper;
 import com.artxp.artxp.api.models.response.ArtistaDTO;
 import com.artxp.artxp.domain.entities.ArtistaEntity;
 import com.artxp.artxp.domain.entities.MovimientoArtisticoEntity;
@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 public class MovimientoArtisticoService {
     @Autowired
     private MovimientoArtisticoRepository movRepository;
-    private final ObraMapper mapper = ObraMapper.INSTANCE;
+//    private final ObraMapper mapper = ObraMapper.INSTANCE;
 
     // Se busca un movimiento artistico por el nombre en caso de que exista se retorna el DTO, si no existe se crea
     public MovimientoArtisticoEntity buscarOCrearMovimientoArtistico(MovimientoArtisticoEntity movimientoArtisticoEntity) {

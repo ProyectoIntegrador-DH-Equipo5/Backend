@@ -1,6 +1,6 @@
 package com.artxp.artxp.infrastructure.services;
 
-import com.artxp.artxp.api.mapper.ObraMapper;
+//import com.artxp.artxp.api.mapper.ObraMapper;
 import com.artxp.artxp.api.models.response.ImagenDTO;
 import com.artxp.artxp.domain.entities.ImagenEntity;
 import com.artxp.artxp.domain.entities.ObraEntity;
@@ -21,7 +21,7 @@ public class ImagenService {
     @Autowired
     private ImagenRepository imagenRepository;
 
-    private final ObraMapper mapper = ObraMapper.INSTANCE;
+//    private final ObraMapper mapper = ObraMapper.INSTANCE;
 
     public List<ImagenEntity> list(){
         return imagenRepository.findByOrderById();
