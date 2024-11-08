@@ -20,29 +20,26 @@ public class TecnicaObraService {
     @Autowired
     private ObraRepository obraRepository;
 
-
-//    private final ObraMapper mapper = ObraMapper.INSTANCE;
-
-    // Se busca una técnica de obra por el nombre en caso de que exista se retorna el DTO, si no existe se crea
+    // Se busca una técnica de obra por el nombre en caso de que exista se retorna, si no existe se crea
     public TecnicaObraEntity buscarOCrearTecnicaObra(TecnicaObraEntity tecnicaObraEntity) {
-        System.out.println("Buscando tecnica con nombre: " + tecnicaObraEntity.getNombre());
+        System.out.println("Buscando Técnica con nombre: " + tecnicaObraEntity.getNombre());
         Optional<TecnicaObraEntity> tecnicaObraEntityOptional =
                 tecnicaObraRepository.findByNombre(tecnicaObraEntity.getNombre()).stream().findFirst();
 
         TecnicaObraEntity tecnicaObraEntityResult;
 
         if (tecnicaObraEntityOptional.isPresent()) {
-            System.out.println("Tecnica encontrado: " + tecnicaObraEntityOptional.get().getId());
-            throw new ConflictException("La técnica ya existe.");
-//            tecnicaObraEntityResult = tecnicaObraEntityOptional.get();
+            System.out.println("Técnica encontrado: " + tecnicaObraEntityOptional.get().getId());
+//            throw new ConflictException("La Técnica ya existe.");
+            tecnicaObraEntityResult = tecnicaObraEntityOptional.get();
 
         } else {
-            System.out.println("Creando nuevo tecnica: " + tecnicaObraEntity.getNombre());
+            System.out.println("Creando nuevo Técnica: " + tecnicaObraEntity.getNombre());
 
             // Guardar la entidad y hacer flush para asegurar que el ID se genere
             tecnicaObraEntityResult = tecnicaObraRepository.saveAndFlush(tecnicaObraEntity);
 
-            System.out.println("Nuevo tecnica guardado con ID: " + tecnicaObraEntityResult.getId());
+            System.out.println("Nuevo Técnica guardado con ID: " + tecnicaObraEntityResult.getId());
         }
 
         return tecnicaObraEntityResult;
@@ -50,7 +47,7 @@ public class TecnicaObraService {
 
     // Buscar Tecnica obra por ID
     public TecnicaObraEntity findById(Integer id) {
-        System.out.println("El id es: " + id);
+        System.out.println("El id de la Técnica es: " + id);
         return tecnicaObraRepository.findById(id)
                 .orElseThrow(() -> new IdNotFoundException(id, "TecnicaObra"));
     }

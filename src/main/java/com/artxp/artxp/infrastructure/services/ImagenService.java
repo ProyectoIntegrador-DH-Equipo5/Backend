@@ -1,27 +1,22 @@
 package com.artxp.artxp.infrastructure.services;
 
-//import com.artxp.artxp.api.mapper.ObraMapper;
-import com.artxp.artxp.api.models.response.ImagenDTO;
 import com.artxp.artxp.domain.entities.ImagenEntity;
-import com.artxp.artxp.domain.entities.ObraEntity;
 import com.artxp.artxp.domain.repositories.ImagenRepository;
-import com.artxp.artxp.util.exeptions.IdNotFoundException;
+import com.artxp.artxp.domain.repositories.ObraRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
 public class ImagenService {
-
     @Autowired
     private ImagenRepository imagenRepository;
-
-//    private final ObraMapper mapper = ObraMapper.INSTANCE;
+    @Autowired
+    private ObraRepository obraRepository;
 
     public List<ImagenEntity> list(){
         return imagenRepository.findByOrderById();

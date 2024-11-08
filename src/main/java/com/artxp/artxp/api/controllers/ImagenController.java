@@ -1,16 +1,11 @@
 package com.artxp.artxp.api.controllers;
 
-import com.artxp.artxp.api.models.response.ImagenDTO;
 import com.artxp.artxp.domain.entities.ImagenEntity;
-import com.artxp.artxp.domain.entities.ObraEntity;
 import com.artxp.artxp.infrastructure.services.CloudinaryService;
 import com.artxp.artxp.infrastructure.services.ImagenService;
-import com.artxp.artxp.infrastructure.services.ObraService;
-import jakarta.persistence.criteria.CriteriaBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 

@@ -1,25 +1,19 @@
 package com.artxp.artxp.infrastructure.services;
 
-//import com.artxp.artxp.api.mapper.ObraMapper;
-import com.artxp.artxp.api.models.response.*;
 import com.artxp.artxp.domain.entities.*;
 import com.artxp.artxp.domain.repositories.ObraRepository;
 import com.artxp.artxp.util.exeptions.BadRequestException;
 import com.artxp.artxp.util.exeptions.ConflictException;
 import com.artxp.artxp.util.exeptions.IdNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.awt.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class ObraService {
@@ -35,7 +29,6 @@ public class ObraService {
     private ImagenService imagenService;
     @Autowired
     private CloudinaryService cloudinaryService;
-//    private final ObraMapper mapper = ObraMapper.INSTANCE;
 
     //Buscar Obra por ID
     public ObraEntity buscarPorId(Integer id){
@@ -111,6 +104,7 @@ public class ObraService {
         }
     }
 
+    // Eliminar Obra por id
     public void eliminaObraPorID(Integer idEliminar) {
         Optional<ObraEntity> obraBuscada = Optional.ofNullable(buscarPorId(idEliminar));
         if (obraBuscada.isPresent()) {
@@ -118,5 +112,10 @@ public class ObraService {
         } else {
             throw new BadRequestException();
         }
+    }
+
+    // Actualizar Obra
+    public ObraEntity actualizarObraNueva(ObraEntity obraActualizada, MultipartFile[] files){
+        return null;
     }
 }

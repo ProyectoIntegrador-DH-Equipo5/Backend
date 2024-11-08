@@ -53,7 +53,6 @@ public class ObraEntity {
     @NonNull private ArtistaEntity artista;
 
     @OneToMany(mappedBy = "obra", cascade = CascadeType.ALL, orphanRemoval = true)
-
     private List<ImagenEntity> imagenes = new ArrayList<>(); //si permitimos guardar obras sin imagenes para no obtener un null
 
 }
