@@ -20,7 +20,7 @@ public class WebSecurityConfig {
                 .csrf(csrf -> csrf.disable()); // Disable CSRF (Cross-Site Request Forgery)
 
         return http.build();
-    }*/
+    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -31,5 +31,5 @@ public class WebSecurityConfig {
                         .anyRequest().permitAll() // Permitir acceso sin autenticación a todas las peticiones
                 );
         return http.build();
-    }
+    }*/
 }
