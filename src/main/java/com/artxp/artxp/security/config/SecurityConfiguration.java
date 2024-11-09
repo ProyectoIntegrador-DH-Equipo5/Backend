@@ -25,27 +25,34 @@ public class SecurityConfiguration {
                 auth -> {
                     //endpoints sin logueo
                     auth.requestMatchers("/api/auth/**").permitAll();
-                    auth.requestMatchers("/h2-console/**").permitAll();
+                    //auth.requestMatchers("/h2-console/**").permitAll();
                     auth.requestMatchers(HttpMethod.GET, "/home/**", "/obra/**").permitAll();
 
                     //endpoint con autenticacion
-                    // endopoint que requieren roles especificos
+                    //endpoint que requieren roles especificos
+
+                    auth.requestMatchers(HttpMethod.GET, "/artista/**", "/movimientoArtistico/**",
+                                    "/imagenes/**", "/tecnicaObra/**", "/usuarios/**")
+                            .hasAnyAuthority("ADMIN", "COLAB");
 
                     auth.requestMatchers(HttpMethod.POST, "/obra/**", "/artista/**", "/movimientoArtistico/**",
-                            "/imagenes/**")
+                            "/imagenes/**", "/tecnicaObra/**", "/usuarios/**")
                             .hasAnyAuthority("ADMIN", "COLAB");
 
                     auth.requestMatchers(HttpMethod.PUT, "/obra/**", "/artista/**", "/movimientoArtistico/**",
-                            "/imagenes/**", "/tecnicaObra/**")
+                            "/imagenes/**", "/tecnicaObra/**", "/usuarios/**")
                             .hasAnyAuthority("ADMIN", "COLAB");
 
                     auth.requestMatchers(HttpMethod.DELETE, "/obra/**", "/artista/**", "/movimientoArtistico/**",
                                     "/imagenes/**", "/tecnicaObra/**")
                             .hasAnyAuthority("ADMIN", "COLAB");
 
-                    auth.requestMatchers("/usuario/**").hasAuthority("ADMIN"); //aun no se crea endpoint usuario
+                    auth.requestMatchers(HttpMethod.DELETE, "/usuarios/**").hasAuthority("ADMIN");
+
+                    auth.requestMatchers("/usuarios/**").hasAuthority("ADMIN");
+
                     // endpoints que requieren autenticacion (al menos el rol de usuario)
-                    auth.requestMatchers("/tecnicaObra/**").authenticated(); //ruta de ensayo
+                    auth.requestMatchers("/tecnicaObra/**").authenticated(); //ruta de ensayo, podría ser para q el usuario pueda ver su cuenta
                     auth.anyRequest().authenticated();
 
                 })

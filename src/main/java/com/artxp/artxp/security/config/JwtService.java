@@ -22,7 +22,8 @@ public class JwtService {
         Map<String, Object> claims = Map.of(
                 "rol", userDetails.getAuthorities(),
                 "nombre", usuario.getName(),
-                "apellido", usuario.getLastname()
+                "apellido", usuario.getLastname(),
+                "email", usuario.getEmail()
         );
 
         //Armamos el token
