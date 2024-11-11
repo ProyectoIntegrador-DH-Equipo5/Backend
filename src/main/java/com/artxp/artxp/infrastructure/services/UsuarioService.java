@@ -4,6 +4,7 @@ import com.artxp.artxp.domain.entities.*;
 import com.artxp.artxp.domain.repositories.UsuarioRepository;
 import com.artxp.artxp.util.exeptions.BadRequestException;
 import com.artxp.artxp.util.exeptions.IdNotFoundException;
+import com.artxp.artxp.util.exeptions.UnauthorizedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -36,10 +37,10 @@ public class UsuarioService {
     //Eliminar usuario por ID
     public void eliminaUsuarioPorID(Integer idEliminar) {
         Optional<UsuarioEntity> usuarioEliminar = Optional.ofNullable(buscarPorId(idEliminar));
-        if (usuarioEliminar.isPresent()) {
+        if (usuarioEliminar.isPresent()  && usuarioEliminar.get().getRol() != Role.ADMIN) {
             usuarioRepository.delete(usuarioEliminar.get());
         } else {
-            throw new BadRequestException();
+            throw new UnauthorizedException("Eliminar");
         }
     }
 
@@ -58,6 +59,7 @@ public class UsuarioService {
                 .orElseThrow(() -> new RuntimeException("Usuario autenticado no encontrado"));
 
         boolean esAdmin = usuarioAutenticado.getRol() == Role.ADMIN;
+        boolean esColab = usuarioAutenticado.getRol() == Role.COLAB;
 
         usuarioBuscado.setName(usuarioActualizar.getName());
         usuarioBuscado.setLastname(usuarioActualizar.getLastname());
@@ -66,10 +68,15 @@ public class UsuarioService {
             usuarioBuscado.setPassword(passwordEncoder.encode(usuarioActualizar.getPassword()));
         }
         // Permitir que solo el admin cambie el rol (para que Colab no vaya cambiarse como Admin y elimine al Admin original)
-        if (esAdmin) {
-            usuarioBuscado.setRol(usuarioActualizar.getRol());
+        if(usuarioActualizar.getRol() != Role.ADMIN) {
+            if (esAdmin || esColab) {
+                if (usuarioBuscado.getRol() != Role.ADMIN) {
+                    usuarioBuscado.setRol(usuarioActualizar.getRol());
+                }
+            }
+        }else{
+            throw new UnauthorizedException("Actualizar");
         }
-
         return usuarioRepository.save(usuarioBuscado);
     }
 
