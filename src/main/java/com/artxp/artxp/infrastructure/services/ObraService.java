@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ObraService {
@@ -115,7 +116,86 @@ public class ObraService {
     }
 
     // Actualizar Obra
-    public ObraEntity actualizarObraNueva(ObraEntity obraActualizada, MultipartFile[] files){
-        return null;
+    public ObraEntity actualizarObraNueva(ObraEntity obraActualizada, Map<String, MultipartFile> files) throws IOException {
+
+        // Verificar que la obra existe
+        ObraEntity obraExistente = buscarPorId(obraActualizada.getId());
+
+        // Actualizar campos de la obra
+        ObraEntity obraModificada = new ObraEntity();
+        obraModificada.setId(obraExistente.getId());
+        obraModificada.setNombre(obraActualizada.getNombre());
+        obraModificada.setFechaCreacion(obraActualizada.getFechaCreacion());
+        obraModificada.setDescripcion(obraActualizada.getDescripcion());
+        obraModificada.setPrecioRenta(obraActualizada.getPrecioRenta());
+        obraModificada.setDisponibilidad(obraActualizada.getDisponibilidad());
+        obraModificada.setTamano(obraActualizada.getTamano());
+
+        // Actualizar técnica, artista, y movimiento artístico si es necesario
+        if (!obraActualizada.getTecnicaObra().getNombre().isEmpty()) {
+            obraModificada.setTecnicaObra(tecnicaObraService.buscarOCrearTecnicaObra(obraActualizada.getTecnicaObra()));
+        } else {obraModificada.setTecnicaObra(obraExistente.getTecnicaObra());}
+
+        if (!obraActualizada.getArtista().getNombre().isEmpty()) {
+            obraModificada.setArtista(artistaService.buscarOCrearArtista(obraActualizada.getArtista()));
+        } else {obraModificada.setArtista(obraExistente.getArtista());}
+
+        if (!obraActualizada.getMovimientoArtistico().getNombre().isEmpty()) {
+            obraModificada.setMovimientoArtistico(movimientoArtisticoService.buscarOCrearMovimientoArtistico(obraActualizada.getMovimientoArtistico()));
+        } else {obraModificada.setMovimientoArtistico(obraExistente.getMovimientoArtistico());}
+
+        obraModificada.setImagenes(new ArrayList<>());
+
+        // Lista para almacenar los IDs de las imágenes que deben mantenerse en la obra
+        List<String> imagenesEstaticas = files.entrySet().stream()
+                .filter(entry -> entry.getKey().contains("artxp_")) // Filtra solo los campos que contienen "artxp_" en el nombre
+                .map(entry -> entry.getKey().split("_")[1]) // Extrae el ID del nombre del campo (e.g., "artxp_123" -> 123)
+                .collect(Collectors.toList());
+
+        // Eliminar las imágenes en Cloudinary que ya no están en la lista de IDs enviados
+        List<ImagenEntity> imagenesAEliminar = obraActualizada.getImagenes().stream()
+                .filter(img -> !imagenesEstaticas.contains(img.getId())) // Si el ID no está en la lista, marcar para eliminar
+                .collect(Collectors.toList());
+
+        // Elimina cada imagen de Cloudinary y de la lista de imágenes de la obra
+        for (ImagenEntity image : imagenesAEliminar) {
+            cloudinaryService.delete(image.getImagenId())
+                    .orElseThrow(()-> new IdNotFoundException(Long.parseLong(image.getImagenId()), "Imagen"));
+            ImagenEntity imageAEliminar = imagenService.getByCloudId(String.valueOf(image.getImagenId())).get();
+            imagenService.delete(imageAEliminar.getId());
+        }
+
+        List<ImagenEntity> imagenEntities = new ArrayList<>();
+
+        // Procesar cada archivo en la solicitud
+        for (Map.Entry<String, MultipartFile> entry : files.entrySet()) {
+            MultipartFile file = entry.getValue();
+            String fieldName = entry.getKey();
+
+            // Extraer el ID del campo "artxp_" si existe; si no, el archivo es nuevo
+            String imageId = fieldName.contains("artxp_") ? fieldName.split("_")[1] : null;
+
+
+
+            if (imageId == null) {
+                // Imagen nueva: Subir a Cloudinary y crear una nueva entrada en la base de datos
+                Map<String, Object> result = cloudinaryService.upload(file);
+                ImagenEntity newImage = new ImagenEntity(
+                        (String) result.get("original_filename"),
+                        (String) result.get("url"),
+                        (String) result.get("public_id")
+                );
+                newImage.setObra(obraModificada); // Asociar la imagen a la obra
+                imagenEntities.add(newImage);
+            } else {
+//                System.out.println("--------->  "+fieldName);
+//                System.out.println("----------------++++++++++++++++++   "+imageId);
+                imagenEntities.add(imagenService.getByCloudId("artxp_"+imageId).get());
+            }
+        }
+
+        // Actualizar la referencia de la colección de imágenes
+        obraModificada.getImagenes().addAll(imagenEntities);
+        return obraRepository.save(obraModificada);
     }
 }

@@ -11,6 +11,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -36,7 +37,7 @@ public class CloudinaryService {
 
     public Map upload(MultipartFile multipartFile) throws IOException {
         File file = convert(multipartFile);
-        String uniqueId = UUID.randomUUID().toString();
+        String uniqueId = "artxp_" + UUID.randomUUID().toString();
         Map params1 = ObjectUtils.asMap(
                 "display_name", file.getName(),
                 "public_id", uniqueId,
@@ -49,9 +50,9 @@ public class CloudinaryService {
         return result;
     }
 
-    public Map delete(String id) throws IOException {
+    public Optional<Map> delete(String id) throws IOException {
         Map result = cloudinary.uploader().destroy(id, ObjectUtils.emptyMap());
-        return result;
+        return Optional.of(result);
     }
 
     private File convert(MultipartFile multipartFile) throws IOException {

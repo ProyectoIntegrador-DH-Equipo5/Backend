@@ -33,5 +33,6 @@ public class ImagenService {
     public boolean exists(Integer id){
         return imagenRepository.existsById(id);
     }
+    public  Optional<ImagenEntity> getByCloudId(String imagenId){return imagenRepository.findFirstByImagenId(imagenId);}
 
 }

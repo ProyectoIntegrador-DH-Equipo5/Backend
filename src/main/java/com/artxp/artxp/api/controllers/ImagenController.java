@@ -53,7 +53,7 @@ public class ImagenController {
         if(!imagenService.exists(id))
             return new ResponseEntity("no existe", HttpStatus.NOT_FOUND);
         ImagenEntity imagen = imagenService.getOne(id).get();
-        Map result = cloudinaryService.delete(imagen.getImagenId());
+        Map result = cloudinaryService.delete(imagen.getImagenId()).get();
         imagenService.delete(id);
         return new ResponseEntity("imagen eliminada", HttpStatus.OK);
     }

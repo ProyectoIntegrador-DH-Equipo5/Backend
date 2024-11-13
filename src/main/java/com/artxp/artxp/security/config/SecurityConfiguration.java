@@ -25,6 +25,7 @@ public class SecurityConfiguration {
                 auth -> {
                     //endpoints sin logueo
                     auth.requestMatchers("/api/auth/**").permitAll();
+                    auth.requestMatchers("/error/**").permitAll();
                     //auth.requestMatchers("/h2-console/**").permitAll();
                     auth.requestMatchers(HttpMethod.GET, "/home/**", "/obra/**").permitAll();
 
