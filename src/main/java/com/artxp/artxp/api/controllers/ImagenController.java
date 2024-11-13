@@ -1,16 +1,11 @@
 package com.artxp.artxp.api.controllers;
 
-import com.artxp.artxp.api.models.response.ImagenDTO;
 import com.artxp.artxp.domain.entities.ImagenEntity;
-import com.artxp.artxp.domain.entities.ObraEntity;
 import com.artxp.artxp.infrastructure.services.CloudinaryService;
 import com.artxp.artxp.infrastructure.services.ImagenService;
-import com.artxp.artxp.infrastructure.services.ObraService;
-import jakarta.persistence.criteria.CriteriaBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -58,7 +53,7 @@ public class ImagenController {
         if(!imagenService.exists(id))
             return new ResponseEntity("no existe", HttpStatus.NOT_FOUND);
         ImagenEntity imagen = imagenService.getOne(id).get();
-        Map result = cloudinaryService.delete(imagen.getImagenId());
+        Map result = cloudinaryService.delete(imagen.getImagenId()).get();
         imagenService.delete(id);
         return new ResponseEntity("imagen eliminada", HttpStatus.OK);
     }

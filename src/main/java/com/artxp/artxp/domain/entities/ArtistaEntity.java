@@ -7,7 +7,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@RequiredArgsConstructor
+@Data
 public class ArtistaEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,28 +17,4 @@ public class ArtistaEntity {
     @NonNull
     private String nombre;
 
-    @Override
-    public String toString() {
-        return "ArtistaEntity{" +
-                "id=" + id +
-                ", nombre='" + nombre + '\'' +
-                '}';
-    }
-
-    // Getters & Setters
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public @NonNull String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(@NonNull String nombre) {
-        this.nombre = nombre;
-    }
 }
