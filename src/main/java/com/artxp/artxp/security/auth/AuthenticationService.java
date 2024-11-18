@@ -21,8 +21,8 @@ public class AuthenticationService {
     //métodos para registro y login
     public AuthenticationResponse register(RegisterRequest request) {
         UsuarioEntity usuario = UsuarioEntity.builder()
-                .name(request.getNombre())
-                .lastname(request.getApellido())
+                .name(request.getName())
+                .lastname(request.getLastname())
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .rol(Role.USER)
