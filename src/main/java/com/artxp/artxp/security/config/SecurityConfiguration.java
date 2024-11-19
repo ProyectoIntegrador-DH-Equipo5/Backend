@@ -27,13 +27,12 @@ public class SecurityConfiguration {
                     auth.requestMatchers("/api/auth/**").permitAll();
                     auth.requestMatchers("/error/**").permitAll();
                     //auth.requestMatchers("/h2-console/**").permitAll();
-                    auth.requestMatchers(HttpMethod.GET, "/home/**", "/obra/**").permitAll();
+                    auth.requestMatchers(HttpMethod.GET, "/", "/obra/**", "/movimientoArtistico/**").permitAll();
 
                     //endpoint con autenticacion
                     //endpoint que requieren roles especificos
 
-                    auth.requestMatchers(HttpMethod.GET, "/artista/**", "/movimientoArtistico/**",
-                                    "/imagenes/**", "/tecnicaObra/**", "/usuarios/**")
+                    auth.requestMatchers(HttpMethod.GET, "/artista/**","/imagenes/**", "/tecnicaObra/**", "/usuarios/**")
                             .hasAnyAuthority("ADMIN", "COLAB");
 
                     auth.requestMatchers(HttpMethod.POST, "/obra/**", "/artista/**", "/movimientoArtistico/**",
@@ -50,10 +49,8 @@ public class SecurityConfiguration {
 
                     auth.requestMatchers(HttpMethod.DELETE, "/usuarios/**").hasAuthority("ADMIN");
 
-                    auth.requestMatchers("/usuarios/**").hasAuthority("ADMIN");
-
                     // endpoints que requieren autenticacion (al menos el rol de usuario)
-                    auth.requestMatchers("/tecnicaObra/**").authenticated(); //ruta de ensayo, podría ser para q el usuario pueda ver su cuenta
+                    //auth.requestMatchers("/tecnicaObra/**").authenticated(); //ruta de ensayo, podría ser para q el usuario pueda ver su cuenta
                     auth.anyRequest().authenticated();
 
                 })
