@@ -1,8 +1,6 @@
 package com.artxp.artxp.api.controllers;
 
-
-import com.artxp.artxp.api.models.response.ArtistaDTO;
-import com.artxp.artxp.api.models.response.ObraDTO;
+import com.artxp.artxp.domain.entities.ArtistaEntity;
 import com.artxp.artxp.infrastructure.services.ArtistaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -21,14 +19,32 @@ public class ArtistaController {
 
     // Buscar o crear un nuevo artista
     @PostMapping
-    public ResponseEntity<ArtistaDTO> guardarArtista(@RequestBody ArtistaDTO artistaDTO) {
-        return ResponseEntity.ok(artistaService.buscarOCrearArtista(artistaDTO));
+    public ResponseEntity<ArtistaEntity> buscarOCrearArtista(@RequestBody ArtistaEntity artistaEntity) {
+        return ResponseEntity.ok(artistaService.buscarOCrearArtista(artistaEntity));
     }
 
     // lista de artistas
     @GetMapping("/listartodos")
-    public ResponseEntity<List<ArtistaDTO>> listarTodo() {
+    public ResponseEntity<List<ArtistaEntity>> listarTodo() {
         return ResponseEntity.ok(artistaService.buscarTodosLosArtistas());
     }
 
+    // Busacar Artista por id
+    @GetMapping("/{id}")
+    public ResponseEntity<ArtistaEntity> buscarArtistaPorId(@PathVariable("id") Integer id) {
+        return ResponseEntity.ok(artistaService.findById(id));
+    }
+
+    // Actualizar Artista
+    @PutMapping
+    public ResponseEntity<ArtistaEntity> actualizarArtista(@RequestBody ArtistaEntity artistaEntity){
+        return ResponseEntity.ok(artistaService.actualizarArtista(artistaEntity));
+    }
+
+    // Eliminar Artista
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> eliminarArtista(@PathVariable("id") Integer id) {
+        artistaService.eliminarArtistaPorId(id);
+        return ResponseEntity.ok("Éxito al eliminar el Movimiento Artístico");
+    }
 }

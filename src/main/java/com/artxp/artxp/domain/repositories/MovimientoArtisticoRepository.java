@@ -7,5 +7,5 @@ import java.util.List;
 import java.util.Optional;
 
 public interface MovimientoArtisticoRepository extends JpaRepository<MovimientoArtisticoEntity,Integer> {
-    List<MovimientoArtisticoEntity> findByNombreMovimiento(String nombre);
+    List<MovimientoArtisticoEntity> findByNombre(String nombre);
 }

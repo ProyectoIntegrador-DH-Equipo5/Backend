@@ -7,7 +7,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@RequiredArgsConstructor
+@Data
 public class TecnicaObraEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,22 +17,4 @@ public class TecnicaObraEntity {
     @NonNull
     private String nombre;
 
-    // Getters & Setters
-
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public @NonNull String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(@NonNull String nombre) {
-        this.nombre = nombre;
-    }
 }

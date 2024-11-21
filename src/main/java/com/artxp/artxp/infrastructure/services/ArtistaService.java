@@ -1,13 +1,11 @@
 package com.artxp.artxp.infrastructure.services;
 
-import com.artxp.artxp.api.mapper.ObraMapper;
-import com.artxp.artxp.api.models.response.ArtistaDTO;
-import com.artxp.artxp.api.models.response.ObraDTO;
 import com.artxp.artxp.domain.entities.ArtistaEntity;
 import com.artxp.artxp.domain.entities.ObraEntity;
 import com.artxp.artxp.domain.repositories.ArtistaRepository;
+import com.artxp.artxp.domain.repositories.ObraRepository;
+import com.artxp.artxp.util.exeptions.ConflictException;
 import com.artxp.artxp.util.exeptions.IdNotFoundException;
-import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,45 +17,88 @@ import java.util.stream.Collectors;
 public class ArtistaService {
     @Autowired
     private ArtistaRepository artistaRepository;
+    @Autowired
+    private ObraRepository obraRepository;
 
-    private final ObraMapper mapper = ObraMapper.INSTANCE;
-
-    // Se busca un artista por el nombre en caso de que exista se retorna el DTO, si no existe se crea
-    public ArtistaDTO buscarOCrearArtista(ArtistaDTO artistaDTO) {
-        System.out.println("Buscando artista con nombre: " + artistaDTO.getNombre());
+    // Se busca un artista por el nombre en caso de que exista se retorna, si no existe se crea
+    public ArtistaEntity buscarOCrearArtista(ArtistaEntity artistaEntity) {
+        System.out.println("Buscando artista con nombre: " + artistaEntity.getNombre());
         Optional<ArtistaEntity> artistaEntityOptional =
-                artistaRepository.findByNombre(artistaDTO.getNombre()).stream().findFirst();
-        ArtistaEntity artistaEntity;
+                artistaRepository.findByNombre(artistaEntity.getNombre()).stream().findFirst();
+
+        ArtistaEntity artistaEntityResult;
 
         if (artistaEntityOptional.isPresent()) {
-            artistaEntity = artistaEntityOptional.get();
-            System.out.println("Artista encontrado: " + artistaEntity.getId());
+            System.out.println("Artista encontrado: " + artistaEntityOptional.get().getId());
+//            throw new ConflictException("El Artista ya existe.");
+            artistaEntityResult = artistaEntityOptional.get();
+
         } else {
-            artistaEntity = mapper.artistaDTOToEntity(artistaDTO);
-            System.out.println("Creando nuevo artista: " + artistaEntity.getNombre());
-            System.out.println("ID antes de guardar: " + artistaEntity.getId());
+            System.out.println("Creando nuevo Artista: " + artistaEntity.getNombre());
 
             // Guardar la entidad y hacer flush para asegurar que el ID se genere
-            artistaEntity = artistaRepository.saveAndFlush(artistaEntity);
+            artistaEntityResult = artistaRepository.saveAndFlush(artistaEntity);
 
-            System.out.println("Nuevo artista guardado con ID: " + artistaEntity.getId());
+            System.out.println("Nuevo artista guardado con ID: " + artistaEntityResult.getId());
         }
 
-        ArtistaDTO resultDTO = mapper.artistaEntityToDTO(artistaEntity);
-        System.out.println("Retornando ArtistaDTO con ID: " + resultDTO.getId());
-        return resultDTO;
+        return artistaEntityResult;
     }
 
-    // Buscar artista por ID
+    // Buscar Artista por ID
     public ArtistaEntity findById(Integer id) {
+        System.out.println("El id del Artista es: " + id);
         return artistaRepository.findById(id)
                 .orElseThrow(() -> new IdNotFoundException(id, "Artista"));
     }
 
     // Retorna toda la lista de artistas
-    public List<ArtistaDTO> buscarTodosLosArtistas() {
+    public List<ArtistaEntity> buscarTodosLosArtistas() {
         List<ArtistaEntity> artistas = artistaRepository.findAll();
-        // Se convierten las entities a DTOs
-        return artistas.stream().map(mapper::artistaEntityToDTO).collect(Collectors.toList());
+        return artistas;
+    }
+
+    // Buscar Obra con el Artista buscado
+    public List<ObraEntity> obraConArtista(Integer artistaId) throws RuntimeException {
+        Optional<ArtistaEntity> artistaBuscado = Optional.ofNullable(findById(artistaId));
+        if (artistaBuscado.isPresent()){
+            return obraRepository.findByArtista(artistaBuscado.get()).get();
+        }else{
+            throw new IdNotFoundException(artistaId, "Artista");
+        }
+    }
+
+    // Eliminar Artista
+    public void eliminarArtistaPorId(Integer id){
+        // Buscar el Artista, lanzar excepción si no existe
+        ArtistaEntity artistaBuscado = artistaRepository.findById(id)
+                .orElseThrow(() -> new IdNotFoundException(id, "Artista"));
+
+        // Verificar si el Artista está asociado a alguna obra
+        List<ObraEntity> obrasAsociadas = obraConArtista(id);
+        if (!obrasAsociadas.isEmpty()) {
+            //Crear un mensaje que incluya los nombres de las obras asociadas
+            String mensajeError = "No se puede eliminar el Artista, ya que está asociado a las siguientes obras: " +
+                    obrasAsociadas.stream()
+                            .map(ObraEntity::getNombre)
+                            .collect(Collectors.joining(", "));
+            throw new ConflictException(mensajeError);
+        }
+
+        // Si no hay obras asociadas, elimnar el artista
+        artistaRepository.deleteById(id);
+    }
+
+    //Actualizar Artista
+    public ArtistaEntity actualizarArtista(ArtistaEntity artistaActualizado) {
+        // Buscar el Artista, lanzar excepción si no existe
+        ArtistaEntity artistaBuscado = artistaRepository.findById(artistaActualizado.getId())
+                .orElseThrow(() -> new IdNotFoundException(artistaActualizado.getId(), "Artista"));
+
+        ArtistaEntity artistaActualizacion = ArtistaEntity.builder()
+                .id(artistaBuscado.getId())
+                .nombre(artistaActualizado.getNombre())
+                .build();
+        return artistaRepository.save(artistaActualizado);
     }
 }

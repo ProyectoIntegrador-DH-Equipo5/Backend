@@ -7,7 +7,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@RequiredArgsConstructor
+@Data
 public class MovimientoArtisticoEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,23 +16,6 @@ public class MovimientoArtisticoEntity {
 
     @Column(name="nombre_movimiento")
     @NonNull
-    private String nombreMovimiento;
+    private String nombre;
 
-    // Getters & Setters
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public @NonNull String getNombreMovimiento() {
-        return nombreMovimiento;
-    }
-
-    public void setNombreMovimiento(@NonNull String nombreMovimiento) {
-        this.nombreMovimiento = nombreMovimiento;
-    }
 }
