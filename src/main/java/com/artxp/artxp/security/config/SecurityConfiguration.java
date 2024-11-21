@@ -49,6 +49,7 @@ public class SecurityConfiguration {
                     auth.requestMatchers(HttpMethod.DELETE, "/usuarios/**").hasAuthority("ADMIN");
 
                     // endpoints que requieren autenticacion (al menos el rol de usuario)
+                    auth.requestMatchers("/reservas/**").authenticated();
                     //auth.requestMatchers("/profile/**").authenticated(); //ruta de ensayo, podría ser para q el usuario pueda ver su cuenta
                     //auth.anyRequest().authenticated();
 

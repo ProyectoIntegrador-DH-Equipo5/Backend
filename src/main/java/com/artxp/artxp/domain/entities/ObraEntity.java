@@ -1,7 +1,6 @@
 package com.artxp.artxp.domain.entities;
 
 import com.artxp.artxp.util.Sizes;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
