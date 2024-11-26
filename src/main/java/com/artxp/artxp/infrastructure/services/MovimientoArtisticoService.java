@@ -98,6 +98,8 @@ public class MovimientoArtisticoService {
         MovimientoArtisticoEntity movimientoArtisticoActualizacion = MovimientoArtisticoEntity.builder()
                 .id(movimientoArtisticoBuscado.getId())
                 .nombre(movimientoArtisticoActualizado.getNombre())
+                .descripcion(movimientoArtisticoActualizado.getDescripcion())
+                .url(movimientoArtisticoActualizado.getUrl())
                 .build();
 //        System.out.println("___________________>>>>>>>>>>>>>>>>"+tecnicaActualizacion);
         return movRepository.save(movimientoArtisticoActualizacion);

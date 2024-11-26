@@ -13,9 +13,16 @@ public class MovimientoArtisticoEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-
     @Column(name="nombre_movimiento")
     @NonNull
     private String nombre;
+
+    @Column(name="descripcion_movimiento")
+    @NonNull
+    private String descripcion;
+
+    @Column(name="imagen_movimiento")
+    @NonNull
+    private String url;
 
 }
