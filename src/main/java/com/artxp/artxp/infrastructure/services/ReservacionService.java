@@ -38,14 +38,21 @@ public class ReservacionService {
 
         Optional<ObraEntity> obraaReservar = Optional.ofNullable(obraRepository.findById(obraId).orElseThrow(() -> new IdNotFoundException(obraId, "Obra")));
 
-            ReservacionEntity newReservation = ReservacionEntity.builder()
-                    .obra(obraaReservar.get())
-                    .fechaInicio(fechaInicio)
-                    .fechaFin(fechaFin)
-                    .build();
+        if(!obraaReservar.get().getDisponibilidad()){
+            throw new ConflictException(" no se pudo reservar la obra porque  no se encuentra disponible");
+        }
 
-
+        List<ReservacionEntity> reservasenIntervalo = this.obtenerReservacionesPorRango(obraId,fechaInicio,fechaFin);
+        if(!reservasenIntervalo.isEmpty()){
+          throw new ConflictException(" no se pudo reservaar la obra porque ya tiene una reserva activa en el intervalo indicado");
+        }
+        ReservacionEntity newReservation = ReservacionEntity.builder()
+                .obra(obraaReservar.get())
+                .fechaInicio(fechaInicio)
+                .fechaFin(fechaFin)
+                .build();
         return reservacionRepository.save(newReservation);
+
     }
 
     public void eliminarReservaPorId(Integer id) {
@@ -63,4 +70,33 @@ public class ReservacionService {
                 .orElseThrow(() -> new IdNotFoundException(id, "Reservacion"));
     }
 
+    public List<ReservacionEntity> obtenerTodasReservaciones() {
+        return reservacionRepository.findAll();
+    }
+
+    public ReservacionEntity buscarPorId(Integer id) {
+        return reservacionRepository.findById(id)
+                .orElseThrow(()-> new IdNotFoundException(id, "Reservacion"));
+    }
+
+    public ReservacionEntity actualizarReserva(Integer reservaOriginalId, Integer obraId, LocalDate fechaInicio, LocalDate fechaFin) {
+
+        ReservacionEntity reservaAnterior = buscarPorId(reservaOriginalId);
+        Optional<ObraEntity> obraaReservar = Optional.ofNullable(obraRepository.findById(obraId).orElseThrow(() -> new IdNotFoundException(obraId, "Obra")));
+
+        if(!obraaReservar.get().getDisponibilidad()){
+            throw new ConflictException(" no se pudo reservar la obra porque  no se encuentra disponible");
+        }
+
+        List<ReservacionEntity> reservasenIntervalo = this.obtenerReservacionesPorRango(obraId,fechaInicio,fechaFin);
+        if(!reservasenIntervalo.isEmpty()){
+            throw new ConflictException(" no se pudo reservaar la obra porque ya tiene una reserva activa en el intervalo indicado");
+        }
+
+        reservaAnterior.setObra(obraaReservar.get());
+        reservaAnterior.setFechaInicio(fechaInicio);
+        reservaAnterior.setFechaFin(fechaFin);
+
+        return reservacionRepository.save(reservaAnterior);
+    }
 }
