@@ -1,6 +1,7 @@
 package com.artxp.artxp.infrastructure.services;
 
 import com.artxp.artxp.domain.entities.*;
+import com.artxp.artxp.domain.repositories.ObraRepository;
 import com.artxp.artxp.domain.repositories.UsuarioRepository;
 import com.artxp.artxp.util.exeptions.BadRequestException;
 import com.artxp.artxp.util.exeptions.IdNotFoundException;
@@ -8,6 +9,7 @@ import com.artxp.artxp.util.exeptions.UnauthorizedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +22,8 @@ public class UsuarioService {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
+    @Autowired
+    private ObraRepository obraRepository;
     @Autowired
     private PasswordEncoder passwordEncoder;
 
@@ -80,4 +84,48 @@ public class UsuarioService {
         return usuarioRepository.save(usuarioBuscado);
     }
 
+    public void agregarFavorito(Integer obraId) {
+        // Obtener el usuario autenticado
+        String email = obtenerUsuarioAutenticado();
+
+        UsuarioEntity usuario = usuarioRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+        ObraEntity obra = obraRepository.findById(obraId)
+                .orElseThrow(() -> new RuntimeException("Obra no encontrada"));
+
+        usuario.getObrasFavoritas().add(obra);
+        usuarioRepository.save(usuario);
+    }
+
+    public void eliminarFavorito(Integer obraId) {
+        String email = obtenerUsuarioAutenticado();
+
+        UsuarioEntity usuario = usuarioRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+        ObraEntity obra = obraRepository.findById(obraId)
+                .orElseThrow(() -> new RuntimeException("Obra no encontrada"));
+
+        usuario.getObrasFavoritas().remove(obra);
+        usuarioRepository.save(usuario);
+    }
+
+    public List<ObraEntity> obtenerObrasFavoritas() {
+        String email = obtenerUsuarioAutenticado();
+
+        UsuarioEntity usuario = usuarioRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+        return usuario.getObrasFavoritas();
+    }
+
+    // ---------METODOS AUXILIARES ---------
+    public String obtenerUsuarioAutenticado() {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (principal instanceof UserDetails) {
+            return ((UserDetails) principal).getUsername(); // Devuelve el email o username
+        }
+        return principal.toString();
+    }
 }

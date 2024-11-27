@@ -3,8 +3,10 @@ package com.artxp.artxp.infrastructure.services;
 import com.artxp.artxp.domain.entities.ObraEntity;
 import com.artxp.artxp.domain.entities.ReservacionEntity;
 import com.artxp.artxp.domain.entities.TecnicaObraEntity;
+import com.artxp.artxp.domain.entities.UsuarioEntity;
 import com.artxp.artxp.domain.repositories.ObraRepository;
 import com.artxp.artxp.domain.repositories.ReservacionRepository;
+import com.artxp.artxp.domain.repositories.UsuarioRepository;
 import com.artxp.artxp.util.exeptions.ConflictException;
 import com.artxp.artxp.util.exeptions.IdNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +23,10 @@ import java.util.stream.Collectors;
 public class ReservacionService {
     @Autowired
     public ObraRepository obraRepository;
-
+    @Autowired
+    public UsuarioService usuarioService;
+    @Autowired
+    public UsuarioRepository usuarioRepository;
 
     private final ReservacionRepository reservacionRepository;
 
@@ -33,8 +38,12 @@ public class ReservacionService {
         return  reservacionRepository.findObrasDisponibles(fechaInicio,fechaFin);
     }
 
-
+    // Crear nueva reserva
     public ReservacionEntity crearReservaNueva(Integer obraId, LocalDate fechaInicio, LocalDate fechaFin) {
+        String usuarioEmail = usuarioService.obtenerUsuarioAutenticado();
+
+        UsuarioEntity usuario = usuarioRepository.findByEmail(usuarioEmail)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
         Optional<ObraEntity> obraaReservar = Optional.ofNullable(obraRepository.findById(obraId).orElseThrow(() -> new IdNotFoundException(obraId, "Obra")));
 
@@ -46,11 +55,18 @@ public class ReservacionService {
         if(!reservasenIntervalo.isEmpty()){
           throw new ConflictException(" no se pudo reservaar la obra porque ya tiene una reserva activa en el intervalo indicado");
         }
+
         ReservacionEntity newReservation = ReservacionEntity.builder()
                 .obra(obraaReservar.get())
                 .fechaInicio(fechaInicio)
                 .fechaFin(fechaFin)
+                .usuario(usuario)
                 .build();
+
+        // Agregar reservacion al usuario correspondiente
+        usuario.getReservaciones().add(newReservation);
+        //usuarioService.actualizarUsuario(usuario);
+
         return reservacionRepository.save(newReservation);
 
     }

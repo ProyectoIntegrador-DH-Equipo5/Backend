@@ -31,4 +31,9 @@ public class ReservacionEntity {
     @NonNull
     @Column(name = "fecha_fin")
     private LocalDate fechaFin;
+
+    @JsonIgnore
+    @ManyToOne
+    @JoinColumn(name= "usuaio_id", nullable = false)
+    private UsuarioEntity usuario;
 }

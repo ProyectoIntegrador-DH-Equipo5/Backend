@@ -10,6 +10,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+
 @Service
 @RequiredArgsConstructor
 public class AuthenticationService {
@@ -26,6 +28,8 @@ public class AuthenticationService {
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .rol(Role.USER)
+                .obrasFavoritas(new ArrayList<>())
+                .reservaciones(new ArrayList<>())
                 .build();
         usuarioRepository.save(usuario);
         String token = jwtService.generateToken(usuario);

@@ -1,6 +1,7 @@
 package com.artxp.artxp.api.controllers;
 
 import com.artxp.artxp.domain.entities.ArtistaEntity;
+import com.artxp.artxp.domain.entities.ObraEntity;
 import com.artxp.artxp.domain.entities.UsuarioEntity;
 import com.artxp.artxp.infrastructure.services.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,4 +43,23 @@ public class UsuarioController {
         return ResponseEntity.ok("Éxito al eliminar el Usuario");
     }
 
+    // Agregar obra a favoritos
+    @PostMapping("/favoritos/{obraId}")
+    public ResponseEntity<String> agregarFavorito(@PathVariable Integer obraId) {
+        usuarioService.agregarFavorito(obraId);
+        return ResponseEntity.ok("Obra agregada a favoritos");
+    }
+
+    // Eliminar obra de favoritos
+    @DeleteMapping("/favoritos/{obraId}")
+    public ResponseEntity<String> eliminarFavorito(@PathVariable Integer obraId) {
+        usuarioService.eliminarFavorito(obraId);
+        return ResponseEntity.ok("Obra eliminada de favoritos");
+    }
+
+    // Obtener todas las obras favoritas del usuario
+    @GetMapping("/favoritos")
+    public ResponseEntity<List<ObraEntity>> obtenerObrasFavoritas() {
+        return ResponseEntity.ok(usuarioService.obtenerObrasFavoritas());
+    }
 }

@@ -1,11 +1,13 @@
 package com.artxp.artxp.domain.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -31,6 +33,19 @@ public class UsuarioEntity implements UserDetails {
 
     @Enumerated(EnumType.STRING)
     private Role rol;
+
+    // Favoritos
+    //@NonNull
+    //@JsonIgnore
+    @OneToMany // Carga Lazy para optimizar consultas
+    @JoinColumn(name = "obra_id")
+    private List<ObraEntity> obrasFavoritas = new ArrayList<>();
+
+    // Reservaciones
+    @NonNull
+    //@JsonIgnore
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
+    private List<ReservacionEntity> reservaciones = new ArrayList<>();
 
     //Configurar permisos o roles que va a tener el usurio
     //Con Granted autority los roles y los permisos viene mezclado

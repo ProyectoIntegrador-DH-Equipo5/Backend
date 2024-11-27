@@ -11,6 +11,7 @@ import java.util.List;
 @Entity(name="obra")
 @NoArgsConstructor
 @AllArgsConstructor
+@RequiredArgsConstructor
 @Builder
 @Data
 
