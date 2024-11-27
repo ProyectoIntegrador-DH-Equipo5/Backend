@@ -5,7 +5,9 @@ import com.artxp.artxp.infrastructure.services.MovimientoArtisticoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -17,10 +19,15 @@ public class MovimientoArtisticoController {
 
     //----------------------- Mapeos -----------------------
 
-    // Buscar o crear un nuevo movimiento artístico
+    // Guardar un movimiento artistico con imagen
     @PostMapping
-    public ResponseEntity<MovimientoArtisticoEntity> buscarOCrearMovimientoArtistico(@RequestBody MovimientoArtisticoEntity movimientoArtisticoEntity) {
-        return ResponseEntity.ok(movimientoArtisticoService.buscarOCrearMovimientoArtistico(movimientoArtisticoEntity));
+    public ResponseEntity<MovimientoArtisticoEntity> guardarMovimientoArtisticoConImagen(
+            @ModelAttribute MovimientoArtisticoEntity movimientoArtisticoEntity,
+            @RequestPart("file") MultipartFile file) throws IOException {
+        // Agregar logs para verificar los datos recibidos
+        System.out.println("Recibido archivo: " + file.getOriginalFilename());
+
+        return ResponseEntity.ok(movimientoArtisticoService.guardarMovimientoArtistico(movimientoArtisticoEntity, file));
     }
 
     // lista de movimientos artisticos
@@ -37,8 +44,10 @@ public class MovimientoArtisticoController {
 
     // Actualizar Movimiento Artístico
     @PutMapping
-    public ResponseEntity<MovimientoArtisticoEntity> actualizarMovimientoArtistico(@RequestBody MovimientoArtisticoEntity movimientoArtisticoEntity){
-        return ResponseEntity.ok(movimientoArtisticoService.actualizarMovimientoArtistico(movimientoArtisticoEntity));
+    public ResponseEntity<MovimientoArtisticoEntity> actualizarMovimientoArtistico(
+            @ModelAttribute MovimientoArtisticoEntity movimientoArtisticoEntity,
+            @RequestPart(value = "file", required = false) MultipartFile file) throws IOException {
+        return ResponseEntity.ok(movimientoArtisticoService.actualizarMovimientoArtistico(movimientoArtisticoEntity, file));
     }
 
     // Eliminar Movimiento Artístico

@@ -62,7 +62,7 @@ public class ObraController {
         return ResponseEntity.ok("Obra de Arte Eliminada");
     }
 
-    //editar por id
+    // Editar por id
     @PutMapping
     public ResponseEntity<?> actualizarObra(@ModelAttribute ObraEntity obra,
                                             HttpServletRequest request){
@@ -81,13 +81,6 @@ public class ObraController {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-//        ObraEntity obraEntityActualizar = null;
-//        try {
-//            obraEntityActualizar = obraService.actualizarObraNueva(obra, files);
-//        } catch (IOException e) {
-//            throw new ConflictException("No se pudo procesar su solicitud. " + e.getMessage());
-//        }
-//        return ResponseEntity.ok(obraEntityActualizar);
     }
     //paginar
 }

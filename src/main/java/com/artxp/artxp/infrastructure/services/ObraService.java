@@ -61,7 +61,7 @@ public class ObraService {
 
             // Manejo de MovimientoArtistico
             MovimientoArtisticoEntity movimientoArtisticoEntity =
-                    movimientoArtisticoService.buscarOCrearMovimientoArtistico(obra.getMovimientoArtistico());
+                    movimientoArtisticoService.findById(obra.getMovimientoArtistico().getId());
 
             // Manejo de TecnicaObra
             TecnicaObraEntity tecnicaObraEntity = tecnicaObraService.buscarOCrearTecnicaObra(obra.getTecnicaObra());
@@ -140,8 +140,12 @@ public class ObraService {
             obraModificada.setArtista(artistaService.buscarOCrearArtista(obraActualizada.getArtista()));
         } else {obraModificada.setArtista(obraExistente.getArtista());}
 
-        if (!obraActualizada.getMovimientoArtistico().getNombre().isEmpty()) {
-            obraModificada.setMovimientoArtistico(movimientoArtisticoService.buscarOCrearMovimientoArtistico(obraActualizada.getMovimientoArtistico()));
+        Integer movimientoNuevoId = obraActualizada.getMovimientoArtistico().getId();
+        if (movimientoNuevoId != null) {
+            MovimientoArtisticoEntity movimientoBuscado =
+                    movimientoArtisticoService.findById(movimientoNuevoId);
+
+            obraModificada.setMovimientoArtistico(movimientoBuscado);
         } else {obraModificada.setMovimientoArtistico(obraExistente.getMovimientoArtistico());}
 
         obraModificada.setImagenes(new ArrayList<>());

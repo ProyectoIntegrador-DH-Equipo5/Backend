@@ -1,5 +1,6 @@
 package com.artxp.artxp.infrastructure.services;
 
+import com.artxp.artxp.domain.entities.ImagenEntity;
 import com.artxp.artxp.domain.entities.MovimientoArtisticoEntity;
 import com.artxp.artxp.domain.entities.ObraEntity;
 import com.artxp.artxp.domain.repositories.MovimientoArtisticoRepository;
@@ -8,8 +9,11 @@ import com.artxp.artxp.util.exeptions.ConflictException;
 import com.artxp.artxp.util.exeptions.IdNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -19,30 +23,39 @@ public class MovimientoArtisticoService {
     private MovimientoArtisticoRepository movRepository;
     @Autowired
     private ObraRepository obraRepository;
+    @Autowired
+    private CloudinaryService cloudinaryService;
 
-    // Se busca un movimiento artistico por el nombre en caso de que exista se retorna, si no existe se crea
-    public MovimientoArtisticoEntity buscarOCrearMovimientoArtistico(MovimientoArtisticoEntity movimientoArtisticoEntity) {
-        System.out.println("Buscando Movimiento Artístico con nombre: " + movimientoArtisticoEntity.getNombre());
+    // Guardar Movimiento Artistico con imagen
+    public MovimientoArtisticoEntity guardarMovimientoArtistico(MovimientoArtisticoEntity movimientoArtisticoEntity, MultipartFile file) throws IOException {
+        // Verificar si el movimiento artístico ya existe por nombre
         Optional<MovimientoArtisticoEntity> movimientoArtisticoEntityOptional =
                 movRepository.findByNombre(movimientoArtisticoEntity.getNombre()).stream().findFirst();
 
-        MovimientoArtisticoEntity movimientoArtisticoEntityResult;
-
         if (movimientoArtisticoEntityOptional.isPresent()) {
-            System.out.println("Movimiento Artístico encontrado: " + movimientoArtisticoEntityOptional.get().getId());
-//            throw new ConflictException("El Movimiento Artístico ya existe.");
-            movimientoArtisticoEntityResult = movimientoArtisticoEntityOptional.get();
-
+            throw new ConflictException("El Movimiento Artístico ya existe.");
         } else {
-            System.out.println("Creando nuevo Movimiento Artístico: " + movimientoArtisticoEntity.getNombre());
+            // Crear Movimiento artistico a guardar en BD
+            MovimientoArtisticoEntity movArtisticoEntityToSave = new MovimientoArtisticoEntity();
+            movArtisticoEntityToSave.setNombre(movimientoArtisticoEntity.getNombre());
+            movArtisticoEntityToSave.setDescripcion(movimientoArtisticoEntity.getDescripcion());
 
-            // Guardar la entidad y hacer flush para asegurar que el ID se genere
-            movimientoArtisticoEntityResult = movRepository.saveAndFlush(movimientoArtisticoEntity);
+            // Subir imagen a Cloudinary
+            Map result = cloudinaryService.upload(file);
 
-            System.out.println("Nuevo Movimiento Artístico guardado con ID: " + movimientoArtisticoEntityResult.getId());
+            // Crear una instancia de ImagenEntity con la URL de la imagen
+            ImagenEntity imagen = new ImagenEntity(
+                    (String) result.get("original_filename"),
+                    (String) result.get("url"),
+                    (String) result.get("public_id")
+            );
+
+            // Asignar la instancia de ImagenEntity al movimiento artístico
+            movArtisticoEntityToSave.setImagen(imagen);
+
+            // Guardar Movimiento Artístico
+            return movRepository.save(movArtisticoEntityToSave);
         }
-
-        return movimientoArtisticoEntityResult;
     }
 
     // Buscar Movimiento Artistico por ID
@@ -89,17 +102,42 @@ public class MovimientoArtisticoService {
         movRepository.deleteById(id);
     }
 
-    //Actualizar Movimiento Artístico
-    public MovimientoArtisticoEntity actualizarMovimientoArtistico(MovimientoArtisticoEntity movimientoArtisticoActualizado) {
+    // Actualizar Movimiento Artístico
+    public MovimientoArtisticoEntity actualizarMovimientoArtistico(MovimientoArtisticoEntity movimientoArtisticoActualizado, MultipartFile file) throws IOException {
         // Buscar el Movimiento Artisitico, lanzar excepción si no existe
         MovimientoArtisticoEntity movimientoArtisticoBuscado = movRepository.findById(movimientoArtisticoActualizado.getId())
-                .orElseThrow(() -> new IdNotFoundException(movimientoArtisticoActualizado.getId(), "Técnica"));
+                .orElseThrow(() -> new IdNotFoundException(movimientoArtisticoActualizado.getId(), "Movimiento Artístico"));
 
-        MovimientoArtisticoEntity movimientoArtisticoActualizacion = MovimientoArtisticoEntity.builder()
-                .id(movimientoArtisticoBuscado.getId())
-                .nombre(movimientoArtisticoActualizado.getNombre())
-                .build();
-//        System.out.println("___________________>>>>>>>>>>>>>>>>"+tecnicaActualizacion);
-        return movRepository.save(movimientoArtisticoActualizacion);
+        // Subir nueva imagen a Cloudinary si se proporciona un archivo
+        if (file != null && !file.isEmpty()) {
+            // Eliminar la imagen anterior de Cloudinary
+            if (movimientoArtisticoBuscado.getImagen() != null) {
+                cloudinaryService.delete(movimientoArtisticoBuscado.getImagen().getImagenId());
+            }
+
+            // Subir nueva imagen a Cloudinary
+            Map result = cloudinaryService.upload(file);
+
+            // Crear una instancia de ImagenEntity con la URL de la nueva imagen
+            ImagenEntity nuevaImagen = new ImagenEntity(
+                    (String) result.get("original_filename"),
+                    (String) result.get("url"),
+                    (String) result.get("public_id")
+            );
+
+            // Asignar la nueva instancia de ImagenEntity al movimiento artístico
+            movimientoArtisticoActualizado.setImagen(nuevaImagen);
+        } else {
+            // Mantener la imagen existente si no se proporciona un nuevo archivo
+            movimientoArtisticoActualizado.setImagen(movimientoArtisticoBuscado.getImagen());
+        }
+
+        // Actualizar los demás campos del movimiento artístico
+        movimientoArtisticoBuscado.setNombre(movimientoArtisticoActualizado.getNombre());
+        movimientoArtisticoBuscado.setDescripcion(movimientoArtisticoActualizado.getDescripcion());
+        movimientoArtisticoBuscado.setImagen(movimientoArtisticoActualizado.getImagen());
+
+        // Guardar Movimiento Artístico actualizado
+        return movRepository.save(movimientoArtisticoBuscado);
     }
 }

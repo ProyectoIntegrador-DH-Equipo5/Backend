@@ -13,9 +13,15 @@ public class MovimientoArtisticoEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-
     @Column(name="nombre_movimiento")
     @NonNull
     private String nombre;
 
+    @Column(name="descripcion")
+    @NonNull
+    private String descripcion;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "imagen_id", referencedColumnName = "id")
+    private ImagenEntity imagen;
 }
