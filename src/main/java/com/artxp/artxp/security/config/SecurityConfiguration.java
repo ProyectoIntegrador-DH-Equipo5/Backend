@@ -29,6 +29,10 @@ public class SecurityConfiguration {
                     auth.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll();
                     auth.requestMatchers(HttpMethod.GET, "/", "/obra/**", "/movimientoArtistico/**").permitAll();
 
+                    // endpoints que requieren autenticacion (al menos el rol de usuario)
+                    auth.requestMatchers("/usuarios/reservas/**").authenticated();
+                    auth.requestMatchers("/usuarios/favoritos/**").authenticated();
+
                     //endpoint con autenticacion, que requieren roles especificos
 
                     auth.requestMatchers(HttpMethod.GET, "/artista/**","/imagenes/**", "/tecnicaObra/**", "/usuarios/**")
@@ -48,9 +52,6 @@ public class SecurityConfiguration {
 
                     auth.requestMatchers(HttpMethod.DELETE, "/usuarios/**").hasAuthority("ADMIN");
 
-                    // endpoints que requieren autenticacion (al menos el rol de usuario)
-                    auth.requestMatchers("/reservas/**").authenticated();
-                    //auth.requestMatchers("/profile/**").authenticated(); //ruta de ensayo, podría ser para q el usuario pueda ver su cuenta
                     //auth.anyRequest().authenticated();
 
                 })
