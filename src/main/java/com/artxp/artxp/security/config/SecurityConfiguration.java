@@ -27,11 +27,12 @@ public class SecurityConfiguration {
                     auth.requestMatchers("/api/auth/**").permitAll();
                     auth.requestMatchers("/error/**").permitAll();
                     auth.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll();
-                    auth.requestMatchers(HttpMethod.GET, "/", "/obra/**", "/movimientoArtistico/**").permitAll();
+                    auth.requestMatchers(HttpMethod.GET, "/", "/obra/**", "/movimientoArtistico/**", "/reservas/**").permitAll();
 
                     // endpoints que requieren autenticacion (al menos el rol de usuario)
-                    auth.requestMatchers("/reservas/**").authenticated();
+                    // auth.requestMatchers("/reservas/**").authenticated();
                     auth.requestMatchers("/usuarios/favoritos/**").authenticated();
+                    auth.requestMatchers(HttpMethod.POST, "/reservas/**").authenticated();
 
                     //endpoint con autenticacion, que requieren roles especificos
 
