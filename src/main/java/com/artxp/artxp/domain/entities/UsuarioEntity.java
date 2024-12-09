@@ -42,7 +42,7 @@ public class UsuarioEntity implements UserDetails {
     private List<ObraEntity> obrasFavoritas = new ArrayList<>();
 
     // Reservaciones
-    @NonNull
+    //@NonNull
     //@JsonIgnore
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
     private List<ReservacionEntity> reservaciones = new ArrayList<>();

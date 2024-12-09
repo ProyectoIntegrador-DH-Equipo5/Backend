@@ -3,7 +3,6 @@ package com.artxp.artxp.infrastructure.services;
 import com.artxp.artxp.domain.entities.*;
 import com.artxp.artxp.domain.repositories.ObraRepository;
 import com.artxp.artxp.domain.repositories.UsuarioRepository;
-import com.artxp.artxp.util.exeptions.BadRequestException;
 import com.artxp.artxp.util.exeptions.IdNotFoundException;
 import com.artxp.artxp.util.exeptions.UnauthorizedException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -118,6 +117,15 @@ public class UsuarioService {
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
         return usuario.getObrasFavoritas();
+    }
+
+    public List<ReservacionEntity> obtenerReservaciones() {
+        String email = obtenerUsuarioAutenticado();
+
+        UsuarioEntity usuario = usuarioRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+        return usuario.getReservaciones();
     }
 
     // ---------METODOS AUXILIARES ---------

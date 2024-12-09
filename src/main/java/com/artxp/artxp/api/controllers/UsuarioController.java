@@ -1,7 +1,7 @@
 package com.artxp.artxp.api.controllers;
 
-import com.artxp.artxp.domain.entities.ArtistaEntity;
 import com.artxp.artxp.domain.entities.ObraEntity;
+import com.artxp.artxp.domain.entities.ReservacionEntity;
 import com.artxp.artxp.domain.entities.UsuarioEntity;
 import com.artxp.artxp.infrastructure.services.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,5 +61,11 @@ public class UsuarioController {
     @GetMapping("/favoritos")
     public ResponseEntity<List<ObraEntity>> obtenerObrasFavoritas() {
         return ResponseEntity.ok(usuarioService.obtenerObrasFavoritas());
+    }
+
+    // Obtener todas las obras favoritas del usuario
+    @GetMapping("/reservaciones")
+    public ResponseEntity<List<ReservacionEntity>> obtenerReservaciones() {
+        return ResponseEntity.ok(usuarioService.obtenerReservaciones());
     }
 }
