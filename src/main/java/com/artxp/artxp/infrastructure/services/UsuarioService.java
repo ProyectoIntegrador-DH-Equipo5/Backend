@@ -12,7 +12,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 
@@ -119,13 +121,24 @@ public class UsuarioService {
         return usuario.getObrasFavoritas();
     }
 
-    public List<ReservacionEntity> obtenerReservaciones() {
+    public List<Map<String, Object>> obtenerReservacionesByUsuario() {
         String email = obtenerUsuarioAutenticado();
 
         UsuarioEntity usuario = usuarioRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
-        return usuario.getReservaciones();
+        List<Object[]> resultados = usuarioRepository.findReservacionesByUsuario(usuario.getId());
+        if (resultados.isEmpty()) {
+            throw new IllegalStateException("El usuario no tiene reservas asociadas.");
+        }
+
+        return resultados.stream().map(obj -> {
+            Map<String, Object> reserva = new HashMap<>();
+            reserva.put("nombreObra", obj[0]);
+            reserva.put("fechaInicio", obj[1]);
+            reserva.put("fechaFin", obj[2]);
+            return reserva;
+        }).toList();
     }
 
     // ---------METODOS AUXILIARES ---------
