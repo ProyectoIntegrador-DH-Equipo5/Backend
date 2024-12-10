@@ -30,7 +30,6 @@ public class SecurityConfiguration {
                     auth.requestMatchers(HttpMethod.GET, "/", "/obra/**", "/movimientoArtistico/**", "/reservas/**").permitAll();
 
                     // endpoints que requieren autenticacion (al menos el rol de usuario)
-                    auth.requestMatchers("/usuarios/reservaciones").authenticated();
                     auth.requestMatchers("/usuarios/favoritos/**").authenticated();
                     auth.requestMatchers("/usuarios/reservaciones/**").authenticated();
                     auth.requestMatchers(HttpMethod.POST, "/reservas/**").authenticated();
