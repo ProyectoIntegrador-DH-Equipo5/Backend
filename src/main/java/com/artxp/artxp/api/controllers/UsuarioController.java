@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping(path="/usuarios")
@@ -65,7 +66,8 @@ public class UsuarioController {
 
     // Obtener todas las obras favoritas del usuario
     @GetMapping("/reservaciones")
-    public ResponseEntity<List<ReservacionEntity>> obtenerReservaciones() {
-        return ResponseEntity.ok(usuarioService.obtenerReservaciones());
+    public ResponseEntity<List<Map<String, Object>>> obtenerReservacionesByUsuario() {
+        List<Map<String, Object>> reservas = usuarioService.obtenerReservacionesByUsuario();
+        return ResponseEntity.ok(reservas);
     }
 }
