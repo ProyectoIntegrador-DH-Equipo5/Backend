@@ -11,7 +11,7 @@ public class corsConfig implements WebMvcConfigurer {
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**") // Permite el mapeo CORS para todas las rutas.
                 .allowedOrigins("http://localhost:5173", "https://frontend-murex-one-19.vercel.app",
-                        "https://frontend-git-resdeploy-artxperiences-projects.vercel.app/") // Permite solo esta URL de origen.
+                        "https://frontend-git-respaldoconexion2-artxperiences-projects.vercel.app/") // Permite solo esta URL de origen.
                 .allowedMethods("GET", "POST", "PUT", "DELETE") // Permite solo estos métodos HTTP.
                 .allowedHeaders("Authorization",
                         "Accept",
