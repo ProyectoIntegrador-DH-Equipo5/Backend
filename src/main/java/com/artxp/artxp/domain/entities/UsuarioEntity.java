@@ -37,14 +37,14 @@ public class UsuarioEntity implements UserDetails {
 
     // Favoritos
     //@NonNull
-    //@JsonIgnore
+    @JsonIgnore
     @OneToMany // Carga Lazy para optimizar consultas
     @JoinColumn(name = "obra_id")
     private List<ObraEntity> obrasFavoritas = new ArrayList<>();
 
     // Reservaciones
     //@NonNull
-    //@JsonIgnore
+    @JsonIgnore
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
     private List<ReservacionEntity> reservaciones = new ArrayList<>();
 
